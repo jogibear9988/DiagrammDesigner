@@ -275,11 +275,11 @@
     <ItemsControl.Items>
 
       <Path Style="{StaticResource Process}" ToolTip="Process">
-        <s:DesignerItem.DragThumbTemplate>
+        <!--<s:DesignerItem.DragThumbTemplate>
           <ControlTemplate>
             <Path Style="{StaticResource Process_DragThumb}"/>
           </ControlTemplate>
-        </s:DesignerItem.DragThumbTemplate>
+        </s:DesignerItem.DragThumbTemplate>-->
       </Path>
 
       <Path Style="{StaticResource Decision}" ToolTip="Decision">

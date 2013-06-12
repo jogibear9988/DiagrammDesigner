@@ -235,6 +235,11 @@ namespace DiagramDesigner
 
         #endregion
 
+        static Connection()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));            
+        }
+
         public Connection(Connector source, Connector sink)
         {
             this.ID = Guid.NewGuid();
