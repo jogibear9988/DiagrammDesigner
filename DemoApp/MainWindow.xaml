@@ -1,0 +1,52 @@
+﻿<Window x:Class="DemoApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
+        xmlns:diagramDesigner="clr-namespace:DiagramDesigner;assembly=DiagramDesigner"
+        WindowStartupLocation="CenterScreen"
+        Title="Diagram Designer"
+        Height="850" Width="1000">
+
+    <Window.Resources>
+        <ContextMenu x:Key="DesignerCanvasContextMenu">
+            <MenuItem Header="Paste" Command="{x:Static ApplicationCommands.Paste}">
+                <MenuItem.Icon>
+                    <Image Source="Resources/Images/Paste.png" Width="16"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Select All" Command="{x:Static diagramDesigner:DesignerCanvas.SelectAll}"/>
+        </ContextMenu>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl Content="{StaticResource MyToolbar}"/>
+
+        <Grid Grid.Row="1" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="265"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!-- Toolbox -->
+            <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                <Expander Header="Flow Chart" Content="{StaticResource FlowChartStencils}" IsExpanded="True"/>                
+            </StackPanel>
+            <!-- GridSplitter -->
+            <GridSplitter Focusable="False" Width="2" Background="LightGray"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
+            <!-- Designer -->
+            <GroupBox Header="Diagram" Grid.Column="1" Margin="3,0,0,0">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+                    <diagramDesigner:DesignerCanvas Focusable="true" x:Name="MyDesigner"
+                            Background="{StaticResource WindowBackgroundBrush}"
+                            Margin="10" FocusVisualStyle="{x:Null}"
+                            ContextMenu="{StaticResource DesignerCanvasContextMenu}"/>
+                </ScrollViewer>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</Window>
