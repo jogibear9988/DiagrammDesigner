@@ -8,6 +8,7 @@
         <ResourceDictionary Source="/DiagramDesigner;component/Resources/DesignerItem.xaml"/>
         <ResourceDictionary Source="/DiagramDesigner;component/Resources/ToolboxItem.xaml"/>
         <ResourceDictionary Source="/DiagramDesigner;component/Resources/Toolbox.xaml"/>
-        <ResourceDictionary Source="/DiagramDesigner;component/Resources/Connection.xaml"/>        
+        <ResourceDictionary Source="/DiagramDesigner;component/Resources/Connection.xaml"/>
+        <ResourceDictionary Source="/DiagramDesigner;component/Resources/ZoomBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

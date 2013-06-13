@@ -38,14 +38,23 @@
             <GridSplitter Focusable="False" Width="2" Background="LightGray"
                     VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
             <!-- Designer -->
-            <GroupBox Header="Diagram" Grid.Column="1" Margin="3,0,0,0">
-                <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto">
+            <GroupBox Header="Diagram" Grid.Column="1" Margin="3,0,0,0">   
+                <Grid>
+                    <ScrollViewer Name="DesignerScrollViewer"
+                                  Background="Transparent"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto">
                     <diagramDesigner:DesignerCanvas Focusable="true" x:Name="MyDesigner"
                             Background="{StaticResource WindowBackgroundBrush}"
                             Margin="10" FocusVisualStyle="{x:Null}"
                             ContextMenu="{StaticResource DesignerCanvasContextMenu}"/>
                 </ScrollViewer>
+                <diagramDesigner:ZoomBox Width="180"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Top"
+                               ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
+                               Margin="0,5,25,0" />
+                </Grid>
             </GroupBox>
         </Grid>
     </Grid>
