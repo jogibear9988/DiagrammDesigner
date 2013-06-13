@@ -29,7 +29,7 @@ using System.Windows.Input;
 using System.Windows.Interactivity;
 using System.Windows.Media;
 
-namespace ControlPanel.SharedClasses.Behaviors
+namespace DiagramDesigner.Behaviors
 {
     public class DragDropBehavior : Behavior<FrameworkElement>
     {

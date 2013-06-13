@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
         xmlns:diagramDesigner="clr-namespace:DiagramDesigner;assembly=DiagramDesigner"
-        xmlns:behaviors="clr-namespace:ControlPanel.SharedClasses.Behaviors;assembly=DiagramDesigner"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviors="clr-namespace:DiagramDesigner.Behaviors;assembly=DiagramDesigner"
         WindowStartupLocation="CenterScreen"
         Title="Diagram Designer"
         Height="850" Width="1000">
