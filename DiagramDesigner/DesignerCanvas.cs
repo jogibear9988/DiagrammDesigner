@@ -114,6 +114,27 @@ namespace DiagramDesigner
             }
         }
 
+        protected void AddDesignerItem(FrameworkElement item, Point position)
+        {
+            DesignerItem newItem = new DesignerItem();
+            newItem.Content = item;
+
+
+            newItem.Width = item.Width;
+            newItem.Height = item.Height;
+
+            DesignerCanvas.SetLeft(newItem, Math.Max(0, position.X - newItem.Width/2));
+            DesignerCanvas.SetTop(newItem, Math.Max(0, position.Y - newItem.Height/2));
+
+            Canvas.SetZIndex(newItem, this.Children.Count);
+            this.Children.Add(newItem);
+            SetConnectorDecoratorTemplate(newItem);
+
+            //update selection
+            this.SelectionService.SelectItem(newItem);
+            newItem.Focus();
+        }
+
         protected override Size MeasureOverride(Size constraint)
         {
             Size size = new Size();
