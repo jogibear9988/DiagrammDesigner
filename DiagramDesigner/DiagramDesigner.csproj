@@ -46,6 +46,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -126,6 +127,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\DragDropBehavior.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="ConnectionAdorner.cs" />
     <Compile Include="Connector.cs" />
