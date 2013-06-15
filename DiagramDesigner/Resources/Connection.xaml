@@ -85,7 +85,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type s:Connection}">
-                    <Canvas DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                    <Canvas Name="PART_Canvas"  DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                             ContextMenu="{StaticResource ConnectionContextMenu}">
                         <Path Name="PART_ConnectionPath"
                               StrokeThickness="2"
@@ -114,21 +114,21 @@
                             </Grid.LayoutTransform>
                         </Grid>
 
-                        <!--Uncomment this to show default label text-->
-                        <!--<TextBlock Width="100" Height="35"
-                                       Text="{Binding Path=(Canvas.ZIndex)}"
+                        <TextBlock Width="100" Height="35"
+                                       Text="{Binding Path=Description}"
                                        Canvas.Left="{Binding LabelPosition.X}"
-                                       Canvas.Top="{Binding LabelPosition.Y}">
-                              <TextBlock.RenderTransform>
-                                <TranslateTransform X="5" Y="5"/>
-                              </TextBlock.RenderTransform>
-                            </TextBlock>-->
-
-                        <Canvas.BitmapEffect>
-                            <DropShadowBitmapEffect Color="Gray" Direction="315" ShadowDepth="10" Softness="0" Opacity="0.1"/>
-                        </Canvas.BitmapEffect>
+                                       Canvas.Top="{Binding LabelPosition.Y}">                              
+                            </TextBlock>
+                        
                     </Canvas>
                     <ControlTemplate.Triggers>
+                        <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource Self},Path=ShowShadow}">
+                            <Setter TargetName="PART_Canvas" Property="BitmapEffect">
+                                <Setter.Value>
+                                    <DropShadowBitmapEffect  Color="Gray" Direction="315" ShadowDepth="10" Softness="0" Opacity="0.1"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
                         <DataTrigger Value="Arrow" Binding="{Binding RelativeSource={RelativeSource Self},Path=SourceArrowSymbol}">
                             <Setter TargetName="PART_SourceAnchorPath" Property="Style" Value="{StaticResource Arrow}"/>
                         </DataTrigger>

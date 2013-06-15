@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using DiagramDesigner.PathFinder;
 
 namespace DiagramDesigner
 {
@@ -235,6 +236,28 @@ namespace DiagramDesigner
 
         #endregion
 
+        #region Dependency Properties
+
+        public string Description
+        {
+            get { return (string)GetValue(DescriptionProperty); }
+            set { SetValue(DescriptionProperty, value); }
+        }
+
+        public static readonly DependencyProperty DescriptionProperty =
+            DependencyProperty.Register("Description", typeof(string), typeof(Connection), new PropertyMetadata(null));
+        
+        public bool ShowShadow
+        {
+            get { return (bool)GetValue(ShowShadowProperty); }
+            set { SetValue(ShowShadowProperty, value); }
+        }
+
+        public static readonly DependencyProperty ShowShadowProperty =
+            DependencyProperty.Register("ShowShadow", typeof(bool), typeof(Connection), new PropertyMetadata(false));
+        
+        #endregion
+        
         static Connection()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));            
@@ -291,7 +314,7 @@ namespace DiagramDesigner
             if (Source != null && Sink != null)
             {
                 PathGeometry geometry = new PathGeometry();
-                List<Point> linePoints = PathFinder.GetConnectionLine(Source.GetInfo(), Sink.GetInfo(), true);
+                List<Point> linePoints = PathFinderHelper.CurrentPathFinder.GetConnectionLine(Source.GetInfo(), Sink.GetInfo(), true);
                 if (linePoints.Count > 0)
                 {
                     PathFigure figure = new PathFigure();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DiagramDesigner
+namespace DiagramDesigner.PathFinder
 {
     // Note: I couldn't find a useful open source library that does
     // orthogonal routing so started to write something on my own.
@@ -11,19 +11,19 @@ namespace DiagramDesigner
     // I will keep on searching.
 
     // Helper class to provide an orthogonal connection path
-    internal class PathFinder
+    internal class OrthogonalPathFinder : IPathFinder
     {
-        private const int margin = 20;
+        private const int margin = 0;
 
-        internal static List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine)
+        public List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine)
         {
             List<Point> linePoints = new List<Point>();
 
-            Rect rectSource = GetRectWithMargin(source, margin);
-            Rect rectSink = GetRectWithMargin(sink, margin);
+            Rect rectSource = PathFinderHelper.GetRectWithMargin(source, margin);
+            Rect rectSink = PathFinderHelper.GetRectWithMargin(sink, margin);
 
-            Point startPoint = GetOffsetPoint(source, rectSource);
-            Point endPoint = GetOffsetPoint(sink, rectSink);
+            Point startPoint = PathFinderHelper.GetOffsetPoint(source, rectSource);
+            Point endPoint = PathFinderHelper.GetOffsetPoint(sink, rectSink);
 
             linePoints.Add(startPoint);
             Point currentPoint = startPoint;
@@ -134,7 +134,7 @@ namespace DiagramDesigner
                                 break;
                             }
 
-                            if ((Distance(n1, endPoint) <= Distance(n2, endPoint)))
+                            if ((PathFinderHelper.Distance(n1, endPoint) <= PathFinderHelper.Distance(n2, endPoint)))
                             {
                                 linePoints.Add(n1);
                                 if (rectSource.Contains(s1))
@@ -206,11 +206,11 @@ namespace DiagramDesigner
             return linePoints;
         }        
 
-        internal static List<Point> GetConnectionLine(ConnectorInfo source, Point sinkPoint, ConnectorOrientation preferredOrientation)
+        public List<Point> GetConnectionLine(ConnectorInfo source, Point sinkPoint, ConnectorOrientation preferredOrientation)
         {
             List<Point> linePoints = new List<Point>();
-            Rect rectSource = GetRectWithMargin(source, 10);
-            Point startPoint = GetOffsetPoint(source, rectSource);
+            Rect rectSource = PathFinderHelper.GetRectWithMargin(source, 10);
+            Point startPoint = PathFinderHelper.GetOffsetPoint(source, rectSource);
             Point endPoint = sinkPoint;
 
             linePoints.Add(startPoint);
@@ -400,7 +400,7 @@ namespace DiagramDesigner
                 return n1;
             }
 
-            if ((Distance(n1, endPoint) <= Distance(n2, endPoint)))
+            if ((PathFinderHelper.Distance(n1, endPoint) <= PathFinderHelper.Distance(n2, endPoint)))
             {
                 flag = true;
                 return n1;
@@ -417,7 +417,7 @@ namespace DiagramDesigner
             Point n1, n2; // neighbors
             GetNeighborCorners(source.Orientation, rectSource, out n1, out n2);
 
-            if ((Distance(n1, endPoint) <= Distance(n2, endPoint)))
+            if ((PathFinderHelper.Distance(n1, endPoint) <= PathFinderHelper.Distance(n2, endPoint)))
             {
                 flag = true;
                 return n1;
@@ -447,7 +447,7 @@ namespace DiagramDesigner
                     if (rectSink.Contains(s2))
                         return s1;
 
-                    if ((Distance(s1, endPoint) <= Distance(s2, endPoint)))
+                    if ((PathFinderHelper.Distance(s1, endPoint) <= PathFinderHelper.Distance(s2, endPoint)))
                         return s1;
                     else
                         return s2;
@@ -545,49 +545,7 @@ namespace DiagramDesigner
                     throw new Exception("No neighour corners found!");
             }
         }
-
-        private static double Distance(Point p1, Point p2)
-        {
-            return Point.Subtract(p1, p2).Length;
-        }
-
-        private static Rect GetRectWithMargin(ConnectorInfo connectorThumb, double margin)
-        {
-            Rect rect = new Rect(connectorThumb.DesignerItemLeft,
-                                 connectorThumb.DesignerItemTop,
-                                 connectorThumb.DesignerItemSize.Width,
-                                 connectorThumb.DesignerItemSize.Height);
-
-            rect.Inflate(margin, margin);
-
-            return rect;
-        }
-
-        private static Point GetOffsetPoint(ConnectorInfo connector, Rect rect)
-        {
-            Point offsetPoint = new Point();
-
-            switch (connector.Orientation)
-            {
-                case ConnectorOrientation.Left:
-                    offsetPoint = new Point(rect.Left, connector.Position.Y);
-                    break;
-                case ConnectorOrientation.Top:
-                    offsetPoint = new Point(connector.Position.X, rect.Top);
-                    break;
-                case ConnectorOrientation.Right:
-                    offsetPoint = new Point(rect.Right, connector.Position.Y);
-                    break;
-                case ConnectorOrientation.Bottom:
-                    offsetPoint = new Point(connector.Position.X, rect.Bottom);
-                    break;
-                default:
-                    break;
-            }
-
-            return offsetPoint;
-        }
-
+       
         private static void CheckPathEnd(ConnectorInfo source, ConnectorInfo sink, bool showLastLine, List<Point> linePoints)
         {
             if (showLastLine)

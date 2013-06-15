@@ -4,6 +4,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls;
+using DiagramDesigner.PathFinder;
 
 namespace DiagramDesigner
 {
@@ -118,7 +119,7 @@ namespace DiagramDesigner
             else
                 targetOrientation = ConnectorOrientation.None;
 
-            List<Point> pathPoints = PathFinder.GetConnectionLine(sourceConnector.GetInfo(), position, targetOrientation);
+            List<Point> pathPoints = PathFinderHelper.CurrentPathFinder.GetConnectionLine(sourceConnector.GetInfo(), position, targetOrientation);
 
             if (pathPoints.Count > 0)
             {

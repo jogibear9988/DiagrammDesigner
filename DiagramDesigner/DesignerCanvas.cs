@@ -114,7 +114,7 @@ namespace DiagramDesigner
             }
         }
 
-        protected void AddDesignerItem(FrameworkElement item, Point position)
+        public void AddDesignerItem(FrameworkElement item, Point position)
         {
             DesignerItem newItem = new DesignerItem();
             newItem.Content = item;

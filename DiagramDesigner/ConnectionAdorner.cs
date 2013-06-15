@@ -6,6 +6,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using DiagramDesigner.PathFinder;
 
 namespace DiagramDesigner
 {
@@ -210,7 +211,7 @@ namespace DiagramDesigner
             else
                 targetOrientation = dragConnector.Orientation;
 
-            List<Point> linePoints = PathFinder.GetConnectionLine(fixConnector.GetInfo(), position, targetOrientation);
+            List<Point> linePoints = PathFinderHelper.CurrentPathFinder.GetConnectionLine(fixConnector.GetInfo(), position, targetOrientation);
 
             if (linePoints.Count > 0)
             {

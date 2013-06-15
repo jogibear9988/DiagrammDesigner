@@ -140,7 +140,10 @@
     <Compile Include="DesignerItem.cs" />
     <Compile Include="IGroupable.cs" />
     <Compile Include="ISelectable.cs" />
-    <Compile Include="PathFinder.cs" />
+    <Compile Include="PathFinder\StraightPathFinder.cs" />
+    <Compile Include="PathFinder\IPathFinder.cs" />
+    <Compile Include="PathFinder\OrthogonalPathFinder.cs" />
+    <Compile Include="PathFinder\PathFinderHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
