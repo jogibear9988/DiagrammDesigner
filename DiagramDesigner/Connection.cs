@@ -92,6 +92,22 @@ namespace DiagramDesigner
             }
         }
 
+        // connection path geometry
+        private List<Point> points;
+        public List<Point> Points
+        {
+            get { return points; }
+            set
+            {
+                if (points != value)
+                {
+                    points = value;
+                    UpdateAnchorPosition();
+                    OnPropertyChanged("Points");
+                }
+            }
+        }
+
         // between source connector position and the beginning 
         // of the path geometry we leave some space for visual reasons; 
         // so the anchor position source really marks the beginning 
@@ -314,16 +330,18 @@ namespace DiagramDesigner
             if (Source != null && Sink != null)
             {
                 PathGeometry geometry = new PathGeometry();
-                List<Point> linePoints = PathFinderHelper.CurrentPathFinder.GetConnectionLine(Source.GetInfo(), Sink.GetInfo(), true);
-                if (linePoints.Count > 0)
+                var pointsList = PathFinderHelper.CurrentPathFinder.GetConnectionLine(Source.GetInfo(), Sink.GetInfo(), true);
+                if (pointsList.Count > 0)
                 {
                     PathFigure figure = new PathFigure();
-                    figure.StartPoint = linePoints[0];
-                    linePoints.Remove(linePoints[0]);
-                    figure.Segments.Add(new PolyLineSegment(linePoints, true));
+                    figure.IsClosed = false;
+                    figure.StartPoint = pointsList[0];
+                    pointsList.Remove(pointsList[0]);
+                    figure.Segments.Add(new PolyLineSegment(pointsList, true));
                     geometry.Figures.Add(figure);
 
                     this.PathGeometry = geometry;
+                    this.Points = pointsList;
                 }
             }
         }
@@ -345,8 +363,8 @@ namespace DiagramDesigner
             this.AnchorAngleSink = Math.Atan2(pathTangentAtEndPoint.Y, pathTangentAtEndPoint.X) * (180 / Math.PI);
 
             // add some margin on source and sink side for visual reasons only
-            pathStartPoint.Offset(-pathTangentAtStartPoint.X * 5, -pathTangentAtStartPoint.Y * 5);
-            pathEndPoint.Offset(pathTangentAtEndPoint.X * 5, pathTangentAtEndPoint.Y * 5);
+            //pathStartPoint.Offset(-pathTangentAtStartPoint.X * 5, -pathTangentAtStartPoint.Y * 5);
+            //pathEndPoint.Offset(pathTangentAtEndPoint.X * 5, pathTangentAtEndPoint.Y * 5);
 
             this.AnchorPositionSource = pathStartPoint;
             this.AnchorPositionSink = pathEndPoint;

@@ -44,15 +44,15 @@
                 <Setter Property="Width" Value="12"/>
                 <Setter Property="Height" Value="12"/>
                 <Setter Property="SnapsToDevicePixels" Value="true"/>
-                <Setter Property="RenderTransform">
+                <!--<Setter Property="RenderTransform">
                     <Setter.Value>
                         <TranslateTransform X="-6" Y="-6"/>
                     </Setter.Value>
-                </Setter>
+                </Setter>-->
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Thumb}">
-                            <Rectangle Fill="#AADCDCDC" Stroke="DodgerBlue" StrokeThickness="1" RadiusX="0" RadiusY="0"/>
+                            <Rectangle Fill="#AADCDCDC" Margin="-6,-6,6,6" Stroke="DodgerBlue" StrokeThickness="1" RadiusX="0" RadiusY="0"/>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -85,7 +85,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type s:Connection}">
-                    <Canvas Name="PART_Canvas"  DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                    <c:ArrowPath Name="PART_Arrow" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                          Stroke="{StaticResource SolidBorderBrush}" StrokeDashArray="{Binding StrokeDashArray}" StrokeThickness="2"
+                          StrokeEndLineCap="Triangle"
+                          SnapsToDevicePixels="True"                      
+                          X1="{Binding AnchorPositionSource.X}"
+                          X2="{Binding AnchorPositionSink.X}"
+                          Y1="{Binding AnchorPositionSource.Y}"
+                          Y2="{Binding AnchorPositionSink.Y}"  
+                          Points="{Binding Points}"
+                          />
+                    <!--<Canvas Name="PART_Canvas"  DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                             ContextMenu="{StaticResource ConnectionContextMenu}">
                         <Path Name="PART_ConnectionPath"
                               StrokeThickness="2"
@@ -107,8 +117,8 @@
                         </Grid>
                         <Grid Style="{StaticResource ArrowGridStyle}"
                               Canvas.Left="{Binding AnchorPositionSink.X}"
-                              Canvas.Top="{Binding AnchorPositionSink.Y}">
-                            <Path Name="PART_SinkAnchorPath"/>
+                              Canvas.Top="{Binding AnchorPositionSink.Y}" RenderTransformOrigin="0.5,1">
+                            <Path Name="PART_SinkAnchorPath" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
                             <Grid.LayoutTransform>
                                 <RotateTransform Angle="{Binding AnchorAngleSink}"/>
                             </Grid.LayoutTransform>
@@ -120,27 +130,28 @@
                                        Canvas.Top="{Binding LabelPosition.Y}">                              
                             </TextBlock>
                         
-                    </Canvas>
+                    </Canvas>-->
                     <ControlTemplate.Triggers>
                         <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource Self},Path=ShowShadow}">
-                            <Setter TargetName="PART_Canvas" Property="BitmapEffect">
+                            <Setter TargetName="PART_Arrow" Property="BitmapEffect">
                                 <Setter.Value>
                                     <DropShadowBitmapEffect  Color="Gray" Direction="315" ShadowDepth="10" Softness="0" Opacity="0.1"/>
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
-                        <DataTrigger Value="Arrow" Binding="{Binding RelativeSource={RelativeSource Self},Path=SourceArrowSymbol}">
+                        <!--<DataTrigger Value="Arrow" Binding="{Binding RelativeSource={RelativeSource Self},Path=SourceArrowSymbol}">
                             <Setter TargetName="PART_SourceAnchorPath" Property="Style" Value="{StaticResource Arrow}"/>
                         </DataTrigger>
                         <DataTrigger Value="Diamond" Binding="{Binding RelativeSource={RelativeSource Self},Path=SourceArrowSymbol}">
                             <Setter TargetName="PART_SourceAnchorPath" Property="Style" Value="{StaticResource Diamond}"/>
-                        </DataTrigger>
+                        </DataTrigger>-->
                         <DataTrigger Value="Arrow" Binding="{Binding RelativeSource={RelativeSource Self},Path=SinkArrowSymbol}">
-                            <Setter TargetName="PART_SinkAnchorPath" Property="Style" Value="{StaticResource Arrow}"/>
+                            <Setter TargetName="PART_Arrow" Property="HeadWidth" Value="10"/>
+                            <Setter TargetName="PART_Arrow" Property="HeadHeight" Value="5"/>
                         </DataTrigger>
-                        <DataTrigger Value="Diamond" Binding="{Binding RelativeSource={RelativeSource Self},Path=SinkArrowSymbol}">
+                        <!--<DataTrigger Value="Diamond" Binding="{Binding RelativeSource={RelativeSource Self},Path=SinkArrowSymbol}">
                             <Setter TargetName="PART_SinkAnchorPath" Property="Style" Value="{StaticResource Diamond}"/>
-                        </DataTrigger>
+                        </DataTrigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

@@ -202,7 +202,7 @@ namespace DiagramDesigner.PathFinder
 
             linePoints = OptimizeLinePoints(linePoints, new Rect[] { rectSource, rectSink }, source.Orientation, sink.Orientation);
 
-            CheckPathEnd(source, sink, showLastLine, linePoints);
+            //CheckPathEnd(source, sink, showLastLine, linePoints);
             return linePoints;
         }        
 

@@ -132,6 +132,7 @@
     <Compile Include="ConnectionAdorner.cs" />
     <Compile Include="Connector.cs" />
     <Compile Include="ConnectorAdorner.cs" />
+    <Compile Include="Controls\ArrowPath.cs" />
     <Compile Include="Controls\DragThumb.cs" />
     <Compile Include="Controls\RelativePositionPanel.cs" />
     <Compile Include="Controls\ResizeThumb.cs" />
