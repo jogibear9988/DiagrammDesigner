@@ -63,7 +63,10 @@ namespace DiagramDesigner
             {
                 Connector sourceConnector = this.sourceConnector;
                 Connector sinkConnector = this.HitConnector;
-                Connection newConnection = new Connection(sourceConnector, sinkConnector);
+                Connection newConnection = new Connection(sourceConnector, sinkConnector, designerCanvas.PathFinder);
+
+                if (designerCanvas.ConnectionStyle != null)
+                    newConnection.Style = designerCanvas.ConnectionStyle;
 
                 Canvas.SetZIndex(newConnection, designerCanvas.Children.Count);
                 this.designerCanvas.Children.Add(newConnection);
@@ -119,7 +122,7 @@ namespace DiagramDesigner
             else
                 targetOrientation = ConnectorOrientation.None;
 
-            List<Point> pathPoints = PathFinderHelper.CurrentPathFinder.GetConnectionLine(sourceConnector.GetInfo(), position, targetOrientation);
+            List<Point> pathPoints = PathFinderHelper.GetPathFinder(this.designerCanvas.PathFinder).GetConnectionLine(sourceConnector.GetInfo(), position, targetOrientation);
 
             if (pathPoints.Count > 0)
             {

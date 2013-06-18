@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,11 +12,12 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.Linq;
+using DiagramDesigner.PathFinder;
 using Microsoft.Win32;
 
 namespace DiagramDesigner
 {
-    public partial class DesignerCanvas
+    public partial class DesignerCanvas:INotifyPropertyChanged
     {
         public static RoutedCommand Group = new RoutedCommand();
         public static RoutedCommand Ungroup = new RoutedCommand();
@@ -62,7 +64,24 @@ namespace DiagramDesigner
 
             this.AllowDrop = true;
             Clipboard.Clear();
+
+            SelectionService.SelectionChanged += () =>
+            {
+                if (SelectionChanged != null)
+                    SelectionChanged(this, null);
+
+                OnPropertyChanged("SelectedItems");
+            };
         }
+
+        public List<ISelectable> SelectedItems
+        {
+            get
+            {
+                return SelectionService.CurrentSelection;
+            }
+        }
+       
 
         #region New Command
 
@@ -105,11 +124,13 @@ namespace DiagramDesigner
 
                 String sourceConnectorName = connectionXML.Element("SourceConnectorName").Value;
                 String sinkConnectorName = connectionXML.Element("SinkConnectorName").Value;
+                PathFinderTypes pathFinder = (PathFinderTypes)Enum.Parse(typeof(PathFinderTypes), connectionXML.Element("PathFinder").Value);
+                
 
                 Connector sourceConnector = GetConnector(sourceID, sourceConnectorName);
                 Connector sinkConnector = GetConnector(sinkID, sinkConnectorName);
 
-                Connection connection = new Connection(sourceConnector, sinkConnector);
+                Connection connection = new Connection(sourceConnector, sinkConnector, pathFinder);
                 Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
                 this.Children.Add(connection);
             }
@@ -211,6 +232,8 @@ namespace DiagramDesigner
                 }
             }
 
+            SelectionService.RaiseSelectionChanged();
+
             // create Connections
             IEnumerable<XElement> connectionsXML = root.Elements("Connections").Elements("Connection");
             foreach (XElement connectionXML in connectionsXML)
@@ -225,11 +248,12 @@ namespace DiagramDesigner
 
                     String sourceConnectorName = connectionXML.Element("SourceConnectorName").Value;
                     String sinkConnectorName = connectionXML.Element("SinkConnectorName").Value;
+                    PathFinderTypes pathFinder = (PathFinderTypes)Enum.Parse(typeof(PathFinderTypes), connectionXML.Element("PathFinder").Value);
 
                     Connector sourceConnector = GetConnector(newSourceID, sourceConnectorName);
                     Connector sinkConnector = GetConnector(newSinkID, sinkConnectorName);
 
-                    Connection connection = new Connection(sourceConnector, sinkConnector);
+                    Connection connection = new Connection(sourceConnector, sinkConnector, pathFinder);
                     Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
                     this.Children.Add(connection);
 
@@ -838,6 +862,7 @@ namespace DiagramDesigner
                                       new XElement("SinkConnectorName", connection.Sink.Name),
                                       new XElement("SourceArrowSymbol", connection.SourceArrowSymbol),
                                       new XElement("SinkArrowSymbol", connection.SinkArrowSymbol),
+                                      new XElement("PathFinder", connection.PathFinder),
                                       new XElement("zIndex", Canvas.GetZIndex(connection))
                                      )
                                   );
@@ -998,5 +1023,13 @@ namespace DiagramDesigner
         }
 
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -8,7 +8,19 @@ namespace DiagramDesigner.PathFinder
 {
     internal static class PathFinderHelper
     {
-        public static IPathFinder CurrentPathFinder = new StraightPathFinder();
+        private static StraightPathFinder straightPathFinder = new StraightPathFinder();
+        private static OrthogonalPathFinder orthogonalPathFinder = new OrthogonalPathFinder();
+
+        public static IPathFinder GetPathFinder(PathFinderTypes pathFinder)
+        {
+            switch (pathFinder)
+            {
+                case PathFinderTypes.OrthogonalPathFinder:
+                    return orthogonalPathFinder;
+                default:
+                    return straightPathFinder;
+            }
+        }
 
 
         internal static Rect GetRectWithMargin(ConnectorInfo connectorThumb, double margin)

@@ -41,6 +41,8 @@
                     VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
             <!-- Designer -->
             <GroupBox Header="Diagram" Grid.Column="1" Margin="3,0,0,0">   
+                <TabControl>
+                    <TabItem Header="Designer">
                 <Grid>
                     <ScrollViewer Name="DesignerScrollViewer"
                                   Background="Transparent"
@@ -61,6 +63,9 @@
                         </i:Interaction.Behaviors>
                     </diagramDesigner:ZoomBox>
                 </Grid>
+                    </TabItem>
+                    <TabItem Header="Test">aaa</TabItem>
+                </TabControl>
             </GroupBox>
         </Grid>
     </Grid>

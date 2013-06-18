@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:s="clr-namespace:DiagramDesigner;assembly=DiagramDesigner">
+                    xmlns:s="clr-namespace:DiagramDesigner;assembly=DiagramDesigner"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:pathFinder="clr-namespace:DiagramDesigner.PathFinder;assembly=DiagramDesigner">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/DemoApp;component/Resources/Shared.xaml"/>
@@ -348,6 +350,19 @@
                         </Button.Content>
                     </Button>
                 </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="PathFinder" Style="{StaticResource ToolbarGroup}" Margin="3">
+            <Grid>
+                <Grid.Resources>
+                    <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="PathFinderTypes">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="pathFinder:PathFinderTypes" />
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                </Grid.Resources>
+                <ComboBox Height="20" ItemsSource="{Binding Source={StaticResource PathFinderTypes}}" SelectedItem="{Binding ElementName=MyDesigner, Path=PathFinder}"></ComboBox>
             </Grid>
         </GroupBox>
     </ToolBar>

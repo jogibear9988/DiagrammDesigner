@@ -82,15 +82,17 @@ namespace DiagramDesigner
                 if (rubberBand.Contains(itemBounds))
                 {
                     if (item is Connection)
-                        designerCanvas.SelectionService.AddToSelection(item as ISelectable);
+                        designerCanvas.SelectionService.AddToSelection(item as ISelectable);                        
                     else
                     {
                         DesignerItem di = item as DesignerItem;
                         if (di.ParentID == Guid.Empty)
                             designerCanvas.SelectionService.AddToSelection(di);
                     }
-                }
+                }                
             }
+
+            designerCanvas.SelectionService.RaiseSelectionChanged();
         }
     }
 }

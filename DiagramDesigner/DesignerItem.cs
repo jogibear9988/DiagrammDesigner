@@ -119,8 +119,7 @@ namespace DiagramDesigner
 
         public DesignerItem(Guid id)
         {
-            this.id = id;
-            this.Loaded += new RoutedEventHandler(DesignerItem_Loaded);
+            this.id = id;            
         }
 
         public DesignerItem()
@@ -128,6 +127,20 @@ namespace DiagramDesigner
         {
         }
 
+        public override void OnApplyTemplate()
+        {
+            ContentPresenter contentPresenter = this.GetTemplateChild("PART_ContentPresenter") as ContentPresenter;
+            DragThumb thumb = this.GetTemplateChild("PART_DragThumb") as DragThumb;
+            if (thumb != null)
+            {
+                ControlTemplate template =
+                    DesignerItem.GetDragThumbTemplate(Content as UIElement) as ControlTemplate;
+                if (template != null)
+                    thumb.Template = template;
+            }
+            
+            base.OnApplyTemplate();
+        }
 
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
@@ -141,10 +154,12 @@ namespace DiagramDesigner
                     if (this.IsSelected)
                     {
                         designer.SelectionService.RemoveFromSelection(this);
+                        designer.SelectionService.RaiseSelectionChanged();
                     }
                     else
                     {
                         designer.SelectionService.AddToSelection(this);
+                        designer.SelectionService.RaiseSelectionChanged();
                     }
                 else if (!this.IsSelected)
                 {
@@ -154,30 +169,6 @@ namespace DiagramDesigner
             }
 
             e.Handled = false;
-        }
-
-        void DesignerItem_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (base.Template != null)
-            {
-                ContentPresenter contentPresenter =
-                    this.Template.FindName("PART_ContentPresenter", this) as ContentPresenter;
-                if (contentPresenter != null)
-                {
-                    UIElement contentVisual = VisualTreeHelper.GetChild(contentPresenter, 0) as UIElement;
-                    if (contentVisual != null)
-                    {
-                        DragThumb thumb = this.Template.FindName("PART_DragThumb", this) as DragThumb;
-                        if (thumb != null)
-                        {
-                            ControlTemplate template =
-                                DesignerItem.GetDragThumbTemplate(contentVisual) as ControlTemplate;
-                            if (template != null)
-                                thumb.Template = template;
-                        }
-                    }
-                }
-            }
-        }
+        }        
     }
 }

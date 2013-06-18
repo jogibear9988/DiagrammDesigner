@@ -108,6 +108,23 @@ namespace DiagramDesigner
             }
         }
 
+        public PathFinderTypes pathFinder;
+        public PathFinderTypes PathFinder
+        {
+            get
+            {                
+                return pathFinder;
+            }
+            set
+            {
+                if (pathFinder != value)
+                {
+                    pathFinder = value;
+                    UpdateAnchorPosition();
+                    OnPropertyChanged("PathFinder");
+                }
+            }
+        }
         // between source connector position and the beginning 
         // of the path geometry we leave some space for visual reasons; 
         // so the anchor position source really marks the beginning 
@@ -279,12 +296,13 @@ namespace DiagramDesigner
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));            
         }
 
-        public Connection(Connector source, Connector sink)
+        public Connection(Connector source, Connector sink, PathFinderTypes pathFinder)
         {
             this.ID = Guid.NewGuid();
             this.Source = source;
+            this.pathFinder = pathFinder;
             this.Sink = sink;
-            base.Unloaded += new RoutedEventHandler(Connection_Unloaded);
+            //base.Unloaded += new RoutedEventHandler(Connection_Unloaded);
         }
 
 
@@ -330,7 +348,7 @@ namespace DiagramDesigner
             if (Source != null && Sink != null)
             {
                 PathGeometry geometry = new PathGeometry();
-                var pointsList = PathFinderHelper.CurrentPathFinder.GetConnectionLine(Source.GetInfo(), Sink.GetInfo(), true);
+                var pointsList = PathFinderHelper.GetPathFinder(this.pathFinder).GetConnectionLine(Source.GetInfo(), Sink.GetInfo(), true);
                 if (pointsList.Count > 0)
                 {
                     PathFigure figure = new PathFigure();
@@ -394,27 +412,27 @@ namespace DiagramDesigner
                 this.connectionAdorner.Visibility = Visibility.Collapsed;
         }
 
-        void Connection_Unloaded(object sender, RoutedEventArgs e)
-        {
-            // do some housekeeping when Connection is unloaded
+        //void Connection_Unloaded(object sender, RoutedEventArgs e)
+        //{
+        //    // do some housekeeping when Connection is unloaded
 
-            // remove event handler
-            this.Source = null;
-            this.Sink = null;
+        //    // remove event handler
+        //    this.Source = null;
+        //    this.Sink = null;
 
-            // remove adorner
-            if (this.connectionAdorner != null)
-            {
-                DesignerCanvas designer = VisualTreeHelper.GetParent(this) as DesignerCanvas;
+        //    // remove adorner
+        //    if (this.connectionAdorner != null)
+        //    {
+        //        DesignerCanvas designer = VisualTreeHelper.GetParent(this) as DesignerCanvas;
 
-                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(this);
-                if (adornerLayer != null)
-                {
-                    adornerLayer.Remove(this.connectionAdorner);
-                    this.connectionAdorner = null;
-                }
-            }
-        }
+        //        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(this);
+        //        if (adornerLayer != null)
+        //        {
+        //            adornerLayer.Remove(this.connectionAdorner);
+        //            this.connectionAdorner = null;
+        //        }
+        //    }
+        //}
 
         #region INotifyPropertyChanged Members
 

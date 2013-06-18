@@ -210,8 +210,8 @@ namespace DiagramDesigner
                 targetOrientation = HitConnector.Orientation;
             else
                 targetOrientation = dragConnector.Orientation;
-
-            List<Point> linePoints = PathFinderHelper.CurrentPathFinder.GetConnectionLine(fixConnector.GetInfo(), position, targetOrientation);
+            
+            List<Point> linePoints = PathFinderHelper.GetPathFinder(this.connection.pathFinder).GetConnectionLine(fixConnector.GetInfo(), position, targetOrientation);
 
             if (linePoints.Count > 0)
             {

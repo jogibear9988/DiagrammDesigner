@@ -6,6 +6,8 @@ namespace DiagramDesigner
 {
     internal class SelectionService
     {
+        public Action SelectionChanged;
+
         private DesignerCanvas designerCanvas;
 
         private List<ISelectable> currentSelection;
@@ -29,6 +31,14 @@ namespace DiagramDesigner
         {
             this.ClearSelection();
             this.AddToSelection(item);
+
+            RaiseSelectionChanged();
+        }
+
+        internal void RaiseSelectionChanged()
+        {
+            if (SelectionChanged != null)
+                SelectionChanged();
         }
 
         internal void AddToSelection(ISelectable item)
@@ -80,6 +90,8 @@ namespace DiagramDesigner
             ClearSelection();
             CurrentSelection.AddRange(designerCanvas.Children.OfType<ISelectable>());
             CurrentSelection.ForEach(item => item.IsSelected = true);
+
+            RaiseSelectionChanged();
         }
 
         internal List<IGroupable> GetGroupMembers(IGroupable item)

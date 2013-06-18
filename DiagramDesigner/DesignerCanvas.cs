@@ -8,6 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Xml;
+using DiagramDesigner.PathFinder;
 
 namespace DiagramDesigner
 {
@@ -27,6 +28,10 @@ namespace DiagramDesigner
             }
         }
 
+        public PathFinderTypes PathFinder { get; set; }
+
+        public event SelectionChangedEventHandler SelectionChanged;
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
@@ -43,6 +48,8 @@ namespace DiagramDesigner
                 e.Handled = true;
             }
         }
+
+        public Style ConnectionStyle { get; set; }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
