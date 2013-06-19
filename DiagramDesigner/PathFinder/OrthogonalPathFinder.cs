@@ -13,7 +13,7 @@ namespace DiagramDesigner.PathFinder
     // Helper class to provide an orthogonal connection path
     internal class OrthogonalPathFinder : IPathFinder
     {
-        private const int margin = 0;
+        private const int margin = 20;
 
         public List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine)
         {
@@ -26,6 +26,7 @@ namespace DiagramDesigner.PathFinder
             Point endPoint = PathFinderHelper.GetOffsetPoint(sink, rectSink);
 
             linePoints.Add(startPoint);
+
             Point currentPoint = startPoint;
 
             if (!rectSink.Contains(currentPoint) && !rectSource.Contains(endPoint))
@@ -203,6 +204,25 @@ namespace DiagramDesigner.PathFinder
             linePoints = OptimizeLinePoints(linePoints, new Rect[] { rectSource, rectSink }, source.Orientation, sink.Orientation);
 
             //CheckPathEnd(source, sink, showLastLine, linePoints);
+
+            if (source.Orientation == ConnectorOrientation.Left)
+                linePoints.Insert(0, new Point(startPoint.X + margin, startPoint.Y));
+            else if (source.Orientation == ConnectorOrientation.Right)
+                linePoints.Insert(0, new Point(startPoint.X - margin, startPoint.Y));
+            else if (source.Orientation == ConnectorOrientation.Top)
+                linePoints.Insert(0, new Point(startPoint.X, startPoint.Y + margin));
+            else if (source.Orientation == ConnectorOrientation.Bottom)
+                linePoints.Insert(0, new Point(startPoint.X, startPoint.Y - margin));
+
+            if (sink.Orientation == ConnectorOrientation.Left)
+                linePoints.Add(new Point(endPoint.X + margin, endPoint.Y));
+            else if (sink.Orientation == ConnectorOrientation.Right)
+                linePoints.Add(new Point(endPoint.X - margin, endPoint.Y));
+            else if (sink.Orientation == ConnectorOrientation.Top)
+                linePoints.Add(new Point(endPoint.X, endPoint.Y + margin));
+            else if (sink.Orientation == ConnectorOrientation.Bottom)
+                linePoints.Add(new Point(endPoint.X, endPoint.Y - margin));
+
             return linePoints;
         }        
 
@@ -259,6 +279,15 @@ namespace DiagramDesigner.PathFinder
                 linePoints = OptimizeLinePoints(linePoints, new Rect[] { rectSource }, source.Orientation, preferredOrientation);
             else
                 linePoints = OptimizeLinePoints(linePoints, new Rect[] { rectSource }, source.Orientation, GetOpositeOrientation(source.Orientation));
+
+            if (source.Orientation == ConnectorOrientation.Left)
+                linePoints.Insert(0, new Point(startPoint.X + margin, startPoint.Y));
+            else if (source.Orientation == ConnectorOrientation.Right)
+                linePoints.Insert(0, new Point(startPoint.X - margin, startPoint.Y));
+            else if (source.Orientation == ConnectorOrientation.Top)
+                linePoints.Insert(0, new Point(startPoint.X, startPoint.Y + margin));
+            else if (source.Orientation == ConnectorOrientation.Bottom)
+                linePoints.Insert(0, new Point(startPoint.X, startPoint.Y - margin));
 
             return linePoints;
         }

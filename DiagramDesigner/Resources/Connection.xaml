@@ -82,7 +82,7 @@
             </Style>
         </Style.Resources>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
-        <Setter Property="Foreground" Value="{StaticResource SolidBorderBrush}"></Setter>
+        <Setter Property="Foreground" Value="{StaticResource SolidBorderBrush}"></Setter>        
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type s:Connection}">
@@ -153,6 +153,10 @@
                         <!--<DataTrigger Value="Diamond" Binding="{Binding RelativeSource={RelativeSource Self},Path=SinkArrowSymbol}">
                             <Setter TargetName="PART_SinkAnchorPath" Property="Style" Value="{StaticResource Diamond}"/>
                         </DataTrigger>-->
+
+                        <DataTrigger Value="true" Binding="{Binding RelativeSource={RelativeSource Self},Path=IsSelected}">
+                            <Setter Property="Foreground" Value="DarkOrange"/>                            
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
