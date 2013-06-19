@@ -97,7 +97,7 @@ namespace DiagramDesigner.Behaviors
         {
             base.OnAttached();
             //this.AssociatedObject.MouseLeftButtonDown += DragStart;
-            this.AssociatedObject.AddHandler(FrameworkElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.DragStart), false);
+            this.AssociatedObject.AddHandler(FrameworkElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.DragStart), true);
 
         }
 
@@ -125,16 +125,20 @@ namespace DiagramDesigner.Behaviors
             dragSource.RenderTransform = (dragSource.RenderTransform is TranslateTransform) ? dragSource.RenderTransform : dragTransform;
 
             // Attach the event handlers for MouseMove and MouseLeftButtonUp for dragging and dropping respectively
-            dragSource.MouseMove += this.DragDelta;
+            //dragSource.MouseMove += this.DragDelta;
+            this.AssociatedObject.AddHandler(FrameworkElement.MouseMoveEvent, new MouseEventHandler(this.DragDelta), true);
             //dragSource.MouseLeftButtonUp += DragComplete;
             this.AssociatedObject.AddHandler(FrameworkElement.MouseLeftButtonUpEvent, new MouseButtonEventHandler(this.DragComplete), true);
-
+            
             //Capture the Mouse
-            dragSource.CaptureMouse();
+            //dragSource.CaptureMouse();
         }
 
         private void DragDelta(object sender, MouseEventArgs args)
         {
+            //Capture the Mouse
+            (sender as UIElement).CaptureMouse();
+
             FrameworkElement dragSource = sender as FrameworkElement;
 
             // Calculate the offset of the dragSource and update its TranslateTransform
@@ -168,7 +172,8 @@ namespace DiagramDesigner.Behaviors
         {
             UIElement dragSource = sender as UIElement;
 
-            dragSource.MouseMove -= this.DragDelta;
+            this.AssociatedObject.RemoveHandler(FrameworkElement.MouseMoveEvent, new MouseEventHandler(this.DragDelta));
+            //dragSource.MouseMove -= this.DragDelta;
             //dragSource.MouseLeftButtonUp -= DragComplete;
             this.AssociatedObject.RemoveHandler(FrameworkElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.DragComplete));
 

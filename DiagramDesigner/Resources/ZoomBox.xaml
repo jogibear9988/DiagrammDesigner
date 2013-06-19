@@ -208,12 +208,12 @@
                             <Expander.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="40" />
                                     </Grid.ColumnDefinitions>
                                     <Slider Name="PART_ZoomSlider"
                                             VerticalAlignment="Center"
-                                            HorizontalAlignment="Center"
+                                            HorizontalAlignment="Stretch"
                                             Margin="0"
                                             Ticks="25,50,75,100,125,150,200,300,400,500"
                                             Minimum="25"
