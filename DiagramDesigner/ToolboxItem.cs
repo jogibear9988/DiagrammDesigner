@@ -10,6 +10,20 @@ namespace DiagramDesigner
     // Represents a selectable item in the Toolbox/>.
     public class ToolboxItem : ContentControl
     {
+        public static Size GetDesiredSize(DependencyObject obj)
+        {
+            return (Size)obj.GetValue(DesiredSizeProperty);
+        }
+
+        public static void SetDesiredSize(DependencyObject obj, Size value)
+        {
+            obj.SetValue(DesiredSizeProperty, value);
+        }
+        
+        public static readonly DependencyProperty DesiredSizeProperty =
+            DependencyProperty.RegisterAttached("DesiredSize", typeof(Size), typeof(ToolboxItem), new PropertyMetadata(null));
+
+        
         // caches the start point of the drag operation
         private Point? dragStartPoint = null;
 
@@ -43,9 +57,14 @@ namespace DiagramDesigner
                 WrapPanel panel = VisualTreeHelper.GetParent(this) as WrapPanel;
                 if (panel != null)
                 {
+                    dataObject.DesiredSize = GetDesiredSize((DependencyObject)this.Content);
+
                     // desired size for DesignerCanvas is the stretched Toolbox item size
-                    double scale = 1.3;
-                    dataObject.DesiredSize = new Size(panel.ItemWidth * scale, panel.ItemHeight * scale);
+                    if (dataObject.DesiredSize == Size.Empty)
+                    {
+                        double scale = 1.3;
+                        dataObject.DesiredSize = new Size(panel.ItemWidth*scale, panel.ItemHeight*scale);
+                    }
                 }
 
                 DragDrop.DoDragDrop(this, dataObject, DragDropEffects.Copy);
