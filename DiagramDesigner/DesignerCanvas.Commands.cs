@@ -72,6 +72,8 @@ namespace DiagramDesigner
 
                 OnPropertyChanged("SelectedItems");
             };
+
+            this.ConnectionGenerator = (source, sink, pathFinder) => new Connection(source, sink, pathFinder);
         }
 
         public List<ISelectable> SelectedItems
@@ -130,7 +132,7 @@ namespace DiagramDesigner
                 Connector sourceConnector = GetConnector(sourceID, sourceConnectorName);
                 Connector sinkConnector = GetConnector(sinkID, sinkConnectorName);
 
-                Connection connection = new Connection(sourceConnector, sinkConnector, pathFinder);
+                Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
                 Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
                 this.Children.Add(connection);
             }
@@ -253,7 +255,7 @@ namespace DiagramDesigner
                     Connector sourceConnector = GetConnector(newSourceID, sourceConnectorName);
                     Connector sinkConnector = GetConnector(newSinkID, sinkConnectorName);
 
-                    Connection connection = new Connection(sourceConnector, sinkConnector, pathFinder);
+                    Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
                     Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
                     this.Children.Add(connection);
 

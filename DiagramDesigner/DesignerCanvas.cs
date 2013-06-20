@@ -121,6 +121,10 @@ namespace DiagramDesigner
             }
         }
 
+        public delegate Connection ConnectionGeneratorDelegate(Connector source, Connector sink, PathFinderTypes pathFinderType);
+
+        public ConnectionGeneratorDelegate ConnectionGenerator { get; set; }
+        
         public void AddDesignerItem(FrameworkElement item, Point position)
         {
             DesignerItem newItem = new DesignerItem();

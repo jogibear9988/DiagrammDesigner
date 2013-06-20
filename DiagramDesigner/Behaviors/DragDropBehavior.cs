@@ -33,6 +33,19 @@ namespace DiagramDesigner.Behaviors
 {
     public class DragDropBehavior : Behavior<FrameworkElement>
     {
+
+
+        public FrameworkElement DragObject
+        {
+            get { return (FrameworkElement)GetValue(DragObjectProperty); }
+            set { SetValue(DragObjectProperty, value); }
+        }
+        
+        public static readonly DependencyProperty DragObjectProperty =
+            DependencyProperty.Register("DragObject", typeof(FrameworkElement), typeof(DragDropBehavior), new PropertyMetadata(null));
+
+        
+
         #region IsHost Property
 
         public static readonly DependencyProperty IsHostProperty = DependencyProperty.RegisterAttached(
@@ -122,7 +135,11 @@ namespace DiagramDesigner.Behaviors
             dragTransform.Y = 0;
 
             // Set the TranslateTransform if it is the first time DragDrop is being used
-            dragSource.RenderTransform = (dragSource.RenderTransform is TranslateTransform) ? dragSource.RenderTransform : dragTransform;
+            var obj = dragSource;
+            if (DragObject != null)
+                obj = DragObject;
+
+            obj.RenderTransform = (obj.RenderTransform is TranslateTransform) ? obj.RenderTransform : dragTransform;
 
             // Attach the event handlers for MouseMove and MouseLeftButtonUp for dragging and dropping respectively
             //dragSource.MouseMove += this.DragDelta;
@@ -141,10 +158,14 @@ namespace DiagramDesigner.Behaviors
 
             FrameworkElement dragSource = sender as FrameworkElement;
 
-            // Calculate the offset of the dragSource and update its TranslateTransform
-            FrameworkElement dragDropHost = FindDragDropHost(dragSource);
+            var obj = dragSource;
+            if (DragObject != null)
+                obj = DragObject;
+
+            // Calculate the offset of the obj and update its TranslateTransform
+            FrameworkElement dragDropHost = FindDragDropHost(obj);
             Point relativeLocationInHost = args.GetPosition(dragDropHost);
-            Point relativeLocationInSource = args.GetPosition(dragSource);
+            Point relativeLocationInSource = args.GetPosition(obj);
 
             // Calculate the delta from the previous position
             double xChange = relativeLocationInHost.X - this.X;
@@ -153,13 +174,13 @@ namespace DiagramDesigner.Behaviors
             // Update the position if this is not the first mouse move
             if (!double.IsNaN(this.X))
             {
-                ((TranslateTransform)dragSource.RenderTransform).X += xChange;
+                ((TranslateTransform)obj.RenderTransform).X += xChange;
                 this.ignoreMouseUp = true;
             }
 
             if (!double.IsNaN(this.Y))
             {
-                ((TranslateTransform)dragSource.RenderTransform).Y += yChange;
+                ((TranslateTransform)obj.RenderTransform).Y += yChange;
                 this.ignoreMouseUp = true;
             }
 
@@ -172,9 +193,13 @@ namespace DiagramDesigner.Behaviors
         {
             UIElement dragSource = sender as UIElement;
 
+            var obj = dragSource;
+            if (DragObject != null)
+                obj = DragObject;
+
             this.AssociatedObject.RemoveHandler(FrameworkElement.MouseMoveEvent, new MouseEventHandler(this.DragDelta));
-            //dragSource.MouseMove -= this.DragDelta;
-            //dragSource.MouseLeftButtonUp -= DragComplete;
+            //obj.MouseMove -= this.DragDelta;
+            //obj.MouseLeftButtonUp -= DragComplete;
             this.AssociatedObject.RemoveHandler(FrameworkElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.DragComplete));
 
             // Set the X & Y Values so that they can be reset next MouseDown
@@ -182,7 +207,7 @@ namespace DiagramDesigner.Behaviors
             this.Y = double.NaN;
 
             // Release Mouse Capture
-            dragSource.ReleaseMouseCapture();
+            (sender as UIElement).ReleaseMouseCapture();
 
             if (!this.ignoreMouseUp && this.MouseClick != null)
             {

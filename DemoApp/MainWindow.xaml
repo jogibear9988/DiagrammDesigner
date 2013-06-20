@@ -57,10 +57,7 @@
                                HorizontalAlignment="Right"
                                VerticalAlignment="Top"
                                ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
-                               Margin="0,5,25,0">
-                        <i:Interaction.Behaviors>
-                            <behaviors:DragDropBehavior />
-                        </i:Interaction.Behaviors>
+                               Margin="0,5,25,0">                       
                     </diagramDesigner:ZoomBox>
                 </Grid>
                     </TabItem>

@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:s="clr-namespace:DiagramDesigner">
+                    xmlns:s="clr-namespace:DiagramDesigner"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:behaviors="clr-namespace:DiagramDesigner.Behaviors">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/DiagramDesigner;component/Resources/Styles/Shared.xaml"/>
@@ -210,6 +212,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="30" />
                                     </Grid.ColumnDefinitions>
                                     <Slider Name="PART_ZoomSlider"
                                             VerticalAlignment="Center"
@@ -232,6 +235,11 @@
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Right"
                                                Margin="1,0,2,0" />
+                                    <Button Grid.Column="2" Margin="5,0,0,0">
+                                        <i:Interaction.Behaviors>
+                                            <behaviors:DragDropBehavior DragObject="{Binding RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </i:Interaction.Behaviors>
+                                    </Button>
                                 </Grid>
                             </Expander.Header>
                         </Expander>

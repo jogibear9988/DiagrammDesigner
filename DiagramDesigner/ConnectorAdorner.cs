@@ -63,7 +63,7 @@ namespace DiagramDesigner
             {
                 Connector sourceConnector = this.sourceConnector;
                 Connector sinkConnector = this.HitConnector;
-                Connection newConnection = new Connection(sourceConnector, sinkConnector, designerCanvas.PathFinder);
+                Connection newConnection = designerCanvas.ConnectionGenerator(sourceConnector, sinkConnector, designerCanvas.PathFinder);
 
                 if (designerCanvas.ConnectionStyle != null)
                     newConnection.Style = designerCanvas.ConnectionStyle;
