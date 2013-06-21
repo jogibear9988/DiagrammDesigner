@@ -109,12 +109,16 @@ namespace DiagramDesigner
                     }
 
                     Canvas.SetZIndex(newItem, this.Children.Count);
-                    this.Children.Add(newItem);                    
+                    this.Children.Add(newItem); 
+                   
+                    
                     SetConnectorDecoratorTemplate(newItem);
 
                     //update selection
                     this.SelectionService.SelectItem(newItem);
                     newItem.Focus();
+
+                    raiseDesignerItemAdded(newItem);
                 }
 
                 e.Handled = true;
@@ -122,9 +126,18 @@ namespace DiagramDesigner
         }
 
         public delegate Connection ConnectionGeneratorDelegate(Connector source, Connector sink, PathFinderTypes pathFinderType);
-
         public ConnectionGeneratorDelegate ConnectionGenerator { get; set; }
-        
+
+        public delegate void DesignerItemAddedDelegate(DesignerItem designerItem);
+        public event DesignerItemAddedDelegate DesignerItemAdded;
+
+        private void raiseDesignerItemAdded(DesignerItem item)
+        {
+            var x = DesignerItemAdded;
+            if (x != null)
+                x(item);
+        }
+
         public void AddDesignerItem(FrameworkElement item, Point position)
         {
             DesignerItem newItem = new DesignerItem();
@@ -144,6 +157,8 @@ namespace DiagramDesigner
             //update selection
             this.SelectionService.SelectItem(newItem);
             newItem.Focus();
+
+            raiseDesignerItemAdded(newItem);
         }
 
         protected override Size MeasureOverride(Size constraint)

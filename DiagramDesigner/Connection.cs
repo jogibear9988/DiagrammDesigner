@@ -302,8 +302,18 @@ namespace DiagramDesigner
             this.Source = source;
             this.pathFinder = pathFinder;
             this.Sink = sink;
+
             //base.Unloaded += new RoutedEventHandler(Connection_Unloaded);
         }
+
+        //void Connection_KeyUp(object sender, KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.Delete)
+        //    {
+        //        DesignerCanvas designer = VisualTreeHelper.GetParent(this) as DesignerCanvas;
+        //        designer.Children.Remove(this);
+        //    }
+        //}
 
 
         protected override void OnMouseDown(System.Windows.Input.MouseButtonEventArgs e)

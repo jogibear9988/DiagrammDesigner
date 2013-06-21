@@ -86,7 +86,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type s:Connection}">
-                    <c:ArrowPath Name="PART_Arrow" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                    <c:ArrowPath ContextMenu="{StaticResource ConnectionContextMenu}" Name="PART_Arrow" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                           Stroke="{TemplateBinding Foreground}" StrokeDashArray="{Binding StrokeDashArray}" StrokeThickness="2"
                           StrokeEndLineCap="Triangle"
                           SnapsToDevicePixels="True"                      
@@ -97,7 +97,7 @@
                           Points="{Binding Points}"
                           />
                     <!--<Canvas Name="PART_Canvas"  DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                            ContextMenu="{StaticResource ConnectionContextMenu}">
+                            >
                         <Path Name="PART_ConnectionPath"
                               StrokeThickness="2"
                               Stroke="{StaticResource SolidBorderBrush}"

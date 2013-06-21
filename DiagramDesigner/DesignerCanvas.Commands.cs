@@ -60,6 +60,9 @@ namespace DiagramDesigner
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.DistributeHorizontal, DistributeHorizontal_Executed, Distribute_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.DistributeVertical, DistributeVertical_Executed, Distribute_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.SelectAll, SelectAll_Executed));
+
+            //this.InputBindings.Add(new KeyBinding(ApplicationCommands.Delete,Key.))
+            ApplicationCommands.Delete.InputGestures.Add(new KeyGesture(Key.Delete));
             SelectAll.InputGestures.Add(new KeyGesture(Key.A, ModifierKeys.Control));
 
             this.AllowDrop = true;
@@ -114,6 +117,8 @@ namespace DiagramDesigner
                 DesignerItem item = DeserializeDesignerItem(itemXML, id, 0, 0);
                 this.Children.Add(item);
                 SetConnectorDecoratorTemplate(item);
+
+                raiseDesignerItemAdded(item);
             }
 
             this.InvalidateVisual();
@@ -215,6 +220,8 @@ namespace DiagramDesigner
                 this.Children.Add(item);
                 SetConnectorDecoratorTemplate(item);
                 newItems.Add(item);
+
+                raiseDesignerItemAdded(item);
             }
 
             // update group hierarchy
@@ -333,6 +340,8 @@ namespace DiagramDesigner
                 item.ParentID = groupItem.ID;
 
             this.SelectionService.SelectItem(groupItem);
+
+            raiseDesignerItemAdded(groupItem);
         }
 
         private void Group_Enabled(object sender, CanExecuteRoutedEventArgs e)
@@ -364,7 +373,9 @@ namespace DiagramDesigner
                     child.ParentID = Guid.Empty;
 
                 this.SelectionService.RemoveFromSelection(groupRoot);
-                this.Children.Remove(groupRoot);
+
+                if (!groupRoot.IsUndeleteable)
+                    this.Children.Remove(groupRoot);
                 UpdateZIndex();
             }
         }
@@ -951,7 +962,9 @@ namespace DiagramDesigner
                         this.Children.Remove(con);
                     }
                 }
-                this.Children.Remove(item);
+
+                if (!item.IsUndeleteable)
+                    this.Children.Remove(item);
             }
 
             SelectionService.ClearSelection();

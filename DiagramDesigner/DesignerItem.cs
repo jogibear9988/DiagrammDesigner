@@ -13,7 +13,7 @@ namespace DiagramDesigner
     [TemplatePart(Name = "PART_ConnectorDecorator", Type = typeof(Control))]
     [TemplatePart(Name = "PART_ContentPresenter", Type = typeof(ContentPresenter))]
     public class DesignerItem : ContentControl, ISelectable, IGroupable
-    {
+    {             
         #region ID
         private Guid id;
         public Guid ID
@@ -109,6 +109,10 @@ namespace DiagramDesigner
                                          new FrameworkPropertyMetadata(false));
 
         #endregion
+
+        public bool IsUndeleteable { get; set; }
+
+        public bool IsFixedSize { get; set; }
 
         static DesignerItem()
         {

@@ -159,6 +159,7 @@
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Value="True" Binding="{Binding RelativeSource={RelativeSource Self},Path=IsSelected}"/>
+                                <Condition Value="False" Binding="{Binding RelativeSource={RelativeSource Self},Path=IsFixedSize}"/>
                                 <Condition Value="{x:Static sys:Guid.Empty}" Binding="{Binding RelativeSource={RelativeSource Self},Path=ParentID}"/>
                             </MultiDataTrigger.Conditions>
                             <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible"/>
