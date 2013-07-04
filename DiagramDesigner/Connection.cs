@@ -214,9 +214,9 @@ namespace DiagramDesigner
             }
             set
             {
-                if (Text != value)
+                if (text != value)
                 {
-                    Text = value;
+                    text = value;
                     OnPropertyChanged("Text");
                 }
             }
