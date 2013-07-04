@@ -43,7 +43,7 @@
             <Style x:Key="ConnectionAdornerThumbStyle" TargetType="{x:Type Thumb}">
                 <Setter Property="Width" Value="12"/>
                 <Setter Property="Height" Value="12"/>
-                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>                
                 <!--<Setter Property="RenderTransform">
                     <Setter.Value>
                         <TranslateTransform X="-6" Y="-6"/>

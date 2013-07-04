@@ -66,14 +66,13 @@ namespace DiagramDesigner
             return this.visualChildren[index];
         }
 
-        public ConnectionAdorner(DesignerCanvas designer, Connection connection)
-            : base(designer)
+        public ConnectionAdorner(DesignerCanvas designer, Connection connection) : base(connection)
         {
             this.designerCanvas = designer;
             adornerCanvas = new Canvas();
             this.visualChildren = new VisualCollection(this);
             this.visualChildren.Add(adornerCanvas);
-
+            
             this.connection = connection;
             this.connection.PropertyChanged += new PropertyChangedEventHandler(AnchorPositionChanged);
 
@@ -84,8 +83,7 @@ namespace DiagramDesigner
 
             base.Unloaded += new RoutedEventHandler(ConnectionAdorner_Unloaded);
         }
-                
-
+      
         void AnchorPositionChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals("AnchorPositionSource"))

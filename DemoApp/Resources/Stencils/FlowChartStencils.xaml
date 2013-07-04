@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:c="clr-namespace:DiagramDesigner.Controls;assembly=DiagramDesigner"
-                    xmlns:s="clr-namespace:DiagramDesigner;assembly=DiagramDesigner">
+                    xmlns:s="clr-namespace:DiagramDesigner;assembly=DiagramDesigner"
+                    xmlns:controls="clr-namespace:DemoApp.Controls">
 
   <Brush x:Key="ItemStroke">#FFD69436</Brush>
   <LinearGradientBrush x:Key="ItemBrush" StartPoint="0,0" EndPoint="0,1">
@@ -274,6 +275,8 @@
              ScrollViewer.HorizontalScrollBarVisibility="Disabled">      
     <ItemsControl.Items>
 
+            <controls:Test1 s:ToolboxItem.DesiredSize="88,130" />
+        
       <Path Style="{StaticResource Process}" ToolTip="Process">
         <!--<s:DesignerItem.DragThumbTemplate>
           <ControlTemplate>

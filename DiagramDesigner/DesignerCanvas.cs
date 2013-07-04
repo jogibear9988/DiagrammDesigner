@@ -93,20 +93,27 @@ namespace DiagramDesigner
 
                     Point position = e.GetPosition(this);
 
+                    var x = Math.Max(0, position.X);
+                    var y = Math.Max(0, position.Y);
+
                     if (dragObject.DesiredSize.HasValue)
                     {
                         Size desiredSize = dragObject.DesiredSize.Value;
                         newItem.Width = desiredSize.Width;
                         newItem.Height = desiredSize.Height;
 
-                        DesignerCanvas.SetLeft(newItem, Math.Max(0, position.X - newItem.Width / 2));
-                        DesignerCanvas.SetTop(newItem, Math.Max(0, position.Y - newItem.Height / 2));
+                        x = Math.Max(0, position.X - newItem.Width/2);
+                        y = Math.Max(0, position.Y - newItem.Height/2);
                     }
-                    else
+
+                    if (this.UseRaster)
                     {
-                        DesignerCanvas.SetLeft(newItem, Math.Max(0, position.X));
-                        DesignerCanvas.SetTop(newItem, Math.Max(0, position.Y));
+                        x = Math.Round(x/Raster, 0)*Raster;
+                        y = Math.Round(y/Raster, 0)*Raster;
                     }
+
+                    DesignerCanvas.SetLeft(newItem, x);
+                    DesignerCanvas.SetTop(newItem, y);
 
                     Canvas.SetZIndex(newItem, this.Children.Count);
                     this.Children.Add(newItem); 
@@ -118,7 +125,7 @@ namespace DiagramDesigner
                     this.SelectionService.SelectItem(newItem);
                     newItem.Focus();
 
-                    raiseDesignerItemAdded(newItem);
+                    raiseDesignerItemAdded(content, newItem);
                 }
 
                 e.Handled = true;
@@ -128,14 +135,38 @@ namespace DiagramDesigner
         public delegate Connection ConnectionGeneratorDelegate(Connector source, Connector sink, PathFinderTypes pathFinderType);
         public ConnectionGeneratorDelegate ConnectionGenerator { get; set; }
 
-        public delegate void DesignerItemAddedDelegate(DesignerItem designerItem);
-        public event DesignerItemAddedDelegate DesignerItemAdded;
+        public delegate void DesignerItemAddedDelegate(object item, DesignerItem designerItem);
+        public event DesignerItemAddedDelegate ItemAdded;
 
-        private void raiseDesignerItemAdded(DesignerItem item)
+        public delegate void DesignerItemRemovedDelegate(object item, DesignerItem designerItem);
+        public event DesignerItemRemovedDelegate ItemRemoved;
+
+        private bool _useRaster = true;
+        public bool UseRaster
         {
-            var x = DesignerItemAdded;
+            get { return _useRaster; }
+            set { _useRaster = value; }
+        }
+
+        private int _raster = 5;
+        public int Raster
+        {
+            get { return _raster; }
+            set { _raster = value; }
+        }
+
+        private void raiseDesignerItemAdded(object item, DesignerItem designerItem)
+        {
+            var x = ItemAdded;
             if (x != null)
-                x(item);
+                x(item, designerItem);
+        }
+
+        private void raiseDesignerItemRemoved(object item, DesignerItem designerItem)
+        {
+            var x = ItemRemoved;
+            if (x != null)
+                x(item, designerItem);
         }
 
         public void AddDesignerItem(FrameworkElement item, Point position, Size size)
@@ -146,8 +177,8 @@ namespace DiagramDesigner
             newItem.Width = size.Width;
             newItem.Height = size.Height;
             
-            DesignerCanvas.SetLeft(newItem, Math.Max(0, position.X - newItem.Width/2));
-            DesignerCanvas.SetTop(newItem, Math.Max(0, position.Y - newItem.Height/2));
+            DesignerCanvas.SetLeft(newItem, position.X);
+            DesignerCanvas.SetTop(newItem, position.Y);
 
             Canvas.SetZIndex(newItem, this.Children.Count);
             this.Children.Add(newItem);
@@ -157,7 +188,7 @@ namespace DiagramDesigner
             this.SelectionService.SelectItem(newItem);
             newItem.Focus();
 
-            raiseDesignerItemAdded(newItem);
+            raiseDesignerItemAdded(item, newItem);
         }
 
         protected override Size MeasureOverride(Size constraint)

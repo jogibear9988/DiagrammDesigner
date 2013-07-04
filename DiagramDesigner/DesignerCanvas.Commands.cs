@@ -118,7 +118,7 @@ namespace DiagramDesigner
                 this.Children.Add(item);
                 SetConnectorDecoratorTemplate(item);
 
-                raiseDesignerItemAdded(item);
+                raiseDesignerItemAdded(item.Content, item);
             }
 
             this.InvalidateVisual();
@@ -221,7 +221,7 @@ namespace DiagramDesigner
                 SetConnectorDecoratorTemplate(item);
                 newItems.Add(item);
 
-                raiseDesignerItemAdded(item);
+                raiseDesignerItemAdded(item.Content, item);
             }
 
             // update group hierarchy
@@ -341,7 +341,7 @@ namespace DiagramDesigner
 
             this.SelectionService.SelectItem(groupItem);
 
-            raiseDesignerItemAdded(groupItem);
+            raiseDesignerItemAdded(groupItem.Content, groupItem);
         }
 
         private void Group_Enabled(object sender, CanExecuteRoutedEventArgs e)
@@ -946,6 +946,8 @@ namespace DiagramDesigner
             foreach (Connection connection in SelectionService.CurrentSelection.OfType<Connection>())
             {
                 this.Children.Remove(connection);
+
+                raiseDesignerItemRemoved(connection, null);
             }
 
             foreach (DesignerItem item in SelectionService.CurrentSelection.OfType<DesignerItem>())
@@ -964,7 +966,11 @@ namespace DiagramDesigner
                 }
 
                 if (!item.IsUndeleteable)
+                {
                     this.Children.Remove(item);
+
+                    raiseDesignerItemRemoved(item.Content, item);
+                }
             }
 
             SelectionService.ClearSelection();

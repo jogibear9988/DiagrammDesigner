@@ -45,8 +45,16 @@ namespace DiagramDesigner.Controls
                     if (double.IsNaN(left)) left = 0;
                     if (double.IsNaN(top)) top = 0;
 
-                    Canvas.SetLeft(item, left + deltaHorizontal);
-                    Canvas.SetTop(item, top + deltaVertical);
+                    if (designer.UseRaster)
+                    {
+                        Canvas.SetLeft(item, Math.Round((left + deltaHorizontal)/designer.Raster, 0)*designer.Raster);
+                        Canvas.SetTop(item, Math.Round((top + deltaVertical) / designer.Raster, 0) * designer.Raster);
+                    }
+                    else
+                    {
+                        Canvas.SetLeft(item, Math.Round(left + deltaHorizontal, 0));
+                        Canvas.SetTop(item, Math.Round(top + deltaVertical, 0));
+                    }
                 }
 
                 designer.InvalidateMeasure();

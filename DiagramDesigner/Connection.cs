@@ -337,9 +337,17 @@ namespace DiagramDesigner
             this.pathFinder = pathFinder;
             this.Sink = sink;
 
+            this.MouseDown += Connection_MouseDown;
+            
             //base.Unloaded += new RoutedEventHandler(Connection_Unloaded);
         }
 
+        void Connection_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //Stops Event Bubbbling, Connections stays in Focus!
+            e.Handled = true;
+        }
+       
         //void Connection_KeyUp(object sender, KeyEventArgs e)
         //{
         //    if (e.Key == Key.Delete)
