@@ -138,15 +138,14 @@ namespace DiagramDesigner
                 x(item);
         }
 
-        public void AddDesignerItem(FrameworkElement item, Point position)
+        public void AddDesignerItem(FrameworkElement item, Point position, Size size)
         {
             DesignerItem newItem = new DesignerItem();
             newItem.Content = item;
 
-
-            newItem.Width = item.Width;
-            newItem.Height = item.Height;
-
+            newItem.Width = size.Width;
+            newItem.Height = size.Height;
+            
             DesignerCanvas.SetLeft(newItem, Math.Max(0, position.X - newItem.Width/2));
             DesignerCanvas.SetTop(newItem, Math.Max(0, position.Y - newItem.Height/2));
 
