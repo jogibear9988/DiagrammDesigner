@@ -50,9 +50,9 @@ namespace DiagramDesigner
             {
                 // XamlWriter.Save() has limitations in exactly what is serialized,
                 // see SDK documentation; short term solution only;
-                string xamlString = XamlWriter.Save(this.Content);
+                //string xamlString = XamlWriter.Save(this.Content);
                 DragObject dataObject = new DragObject();
-                dataObject.Xaml = xamlString;
+                dataObject.ObjectType = this.Content.GetType();
 
                 WrapPanel panel = VisualTreeHelper.GetParent(this) as WrapPanel;
                 if (panel != null)
@@ -78,7 +78,7 @@ namespace DiagramDesigner
     public class DragObject
     {
         // Xaml string that represents the serialized content
-        public String Xaml { get; set; }
+        public Type ObjectType { get; set; }
 
         // Defines width and height of the DesignerItem
         // when this DragObject is dropped on the DesignerCanvas

@@ -139,6 +139,7 @@ namespace DiagramDesigner
                 {
                     anchorPositionSource = value;
                     OnPropertyChanged("AnchorPositionSource");
+                    OnPropertyChanged("AnchorPositionMiddle");
                 }
             }
         }
@@ -170,6 +171,7 @@ namespace DiagramDesigner
                 {
                     anchorPositionSink = value;
                     OnPropertyChanged("AnchorPositionSink");
+                    OnPropertyChanged("AnchorPositionMiddle");
                 }
             }
         }
@@ -183,7 +185,39 @@ namespace DiagramDesigner
                 if (anchorAngleSink != value)
                 {
                     anchorAngleSink = value;
-                    OnPropertyChanged("AnchorAngleSink");
+                    OnPropertyChanged("AnchorAngleSink");                    
+                }
+            }
+        }
+
+        public Point AnchorPositionMiddle
+        {
+            get
+            {
+                if (AnchorPositionSource != null && AnchorPositionSink != null)
+                {
+                    var x = (anchorPositionSource.X + anchorPositionSink.X)/2;
+                    var y = (anchorPositionSource.Y + anchorPositionSink.Y)/2;
+                    return new Point(Math.Abs(x), Math.Abs(y));
+                }
+
+                return new Point(0,0);
+            }            
+        }
+
+        private string text = "";
+        public string Text
+        {
+            get
+            {
+                return text;
+            }
+            set
+            {
+                if (Text != value)
+                {
+                    Text = value;
+                    OnPropertyChanged("Text");
                 }
             }
         }

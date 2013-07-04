@@ -81,10 +81,10 @@ namespace DiagramDesigner
         {
             base.OnDrop(e);
             DragObject dragObject = e.Data.GetData(typeof(DragObject)) as DragObject;
-            if (dragObject != null && !String.IsNullOrEmpty(dragObject.Xaml))
+            if (dragObject != null) // && !String.IsNullOrEmpty(dragObject.Xaml))
             {
                 DesignerItem newItem = null;
-                Object content = XamlReader.Load(XmlReader.Create(new StringReader(dragObject.Xaml)));
+                Object content = Activator.CreateInstance(dragObject.ObjectType);// XamlReader.Load(XmlReader.Create(new StringReader(dragObject.Xaml)));
 
                 if (content != null)
                 {

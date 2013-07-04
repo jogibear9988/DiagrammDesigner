@@ -87,7 +87,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type s:Connection}">
-                    <c:ArrowPath ContextMenu="{StaticResource ConnectionContextMenu}" Name="PART_Arrow" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                    <Canvas DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                    <c:ArrowPath ContextMenu="{StaticResource ConnectionContextMenu}" Name="PART_Arrow"
                           Stroke="{TemplateBinding Foreground}" StrokeDashArray="{Binding StrokeDashArray}" StrokeThickness="2"
                           StrokeEndLineCap="Triangle"
                           SnapsToDevicePixels="True"                      
@@ -97,42 +98,12 @@
                           Y2="{Binding AnchorPositionSink.Y}"  
                           Points="{Binding Points}"
                           />
-                    <!--<Canvas Name="PART_Canvas"  DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                            >
-                        <Path Name="PART_ConnectionPath"
-                              StrokeThickness="2"
-                              Stroke="{StaticResource SolidBorderBrush}"
-                              StrokeStartLineCap="Round"
-                              StrokeEndLineCap="Round"
-                              StrokeLineJoin="Round"
-                              StrokeDashArray="{Binding StrokeDashArray}"
-                              SnapsToDevicePixels="True"
-                              Data="{Binding PathGeometry}">
-                        </Path>
-                        <Grid Style="{StaticResource ArrowGridStyle}"
-                              Canvas.Left="{Binding AnchorPositionSource.X}"
-                              Canvas.Top="{Binding AnchorPositionSource.Y}">
-                            <Path Name="PART_SourceAnchorPath"/>
-                            <Grid.LayoutTransform>
-                                <RotateTransform Angle="{Binding AnchorAngleSource}"/>
-                            </Grid.LayoutTransform>
-                        </Grid>
-                        <Grid Style="{StaticResource ArrowGridStyle}"
-                              Canvas.Left="{Binding AnchorPositionSink.X}"
-                              Canvas.Top="{Binding AnchorPositionSink.Y}" RenderTransformOrigin="0.5,1">
-                            <Path Name="PART_SinkAnchorPath" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
-                            <Grid.LayoutTransform>
-                                <RotateTransform Angle="{Binding AnchorAngleSink}"/>
-                            </Grid.LayoutTransform>
-                        </Grid>
-
-                        <TextBlock Width="100" Height="35"
-                                       Text="{Binding Path=Description}"
-                                       Canvas.Left="{Binding LabelPosition.X}"
-                                       Canvas.Top="{Binding LabelPosition.Y}">                              
-                            </TextBlock>
-                        
-                    </Canvas>-->
+                        <TextBlock Canvas.Left="{Binding AnchorPositionMiddle.X}" Canvas.Top="{Binding AnchorPositionMiddle.Y}" Text="{Binding Text}">
+                            <TextBlock.LayoutTransform>
+                                <RotateTransform Angle="{Binding AnchorAngleSink}" />
+                            </TextBlock.LayoutTransform>
+                        </TextBlock>
+                    </Canvas>
                     <ControlTemplate.Triggers>
                         <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource Self},Path=ShowShadow}">
                             <Setter TargetName="PART_Arrow" Property="Effect">
@@ -141,20 +112,12 @@
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
-                        <!--<DataTrigger Value="Arrow" Binding="{Binding RelativeSource={RelativeSource Self},Path=SourceArrowSymbol}">
-                            <Setter TargetName="PART_SourceAnchorPath" Property="Style" Value="{StaticResource Arrow}"/>
-                        </DataTrigger>
-                        <DataTrigger Value="Diamond" Binding="{Binding RelativeSource={RelativeSource Self},Path=SourceArrowSymbol}">
-                            <Setter TargetName="PART_SourceAnchorPath" Property="Style" Value="{StaticResource Diamond}"/>
-                        </DataTrigger>-->
+                        
                         <DataTrigger Value="Arrow" Binding="{Binding RelativeSource={RelativeSource Self},Path=SinkArrowSymbol}">
                             <Setter TargetName="PART_Arrow" Property="HeadWidth" Value="10"/>
                             <Setter TargetName="PART_Arrow" Property="HeadHeight" Value="5"/>
                         </DataTrigger>
-                        <!--<DataTrigger Value="Diamond" Binding="{Binding RelativeSource={RelativeSource Self},Path=SinkArrowSymbol}">
-                            <Setter TargetName="PART_SinkAnchorPath" Property="Style" Value="{StaticResource Diamond}"/>
-                        </DataTrigger>-->
-
+                        
                         <DataTrigger Value="true" Binding="{Binding RelativeSource={RelativeSource Self},Path=IsSelected}">
                             <Setter Property="Foreground" Value="DarkOrange"/>                            
                         </DataTrigger>
