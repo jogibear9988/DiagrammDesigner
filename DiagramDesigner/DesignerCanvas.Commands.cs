@@ -37,6 +37,8 @@ namespace DiagramDesigner
 
         public DesignerCanvas()
         {
+            designerItems = new List<DesignerItem>();
+
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.New, New_Executed));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open_Executed));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, Save_Executed));

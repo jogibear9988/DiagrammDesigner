@@ -88,13 +88,13 @@ namespace DiagramDesigner
             DragObject dragObject = e.Data.GetData(typeof(DragObject)) as DragObject;
             if (dragObject != null) // && !String.IsNullOrEmpty(dragObject.Xaml))
             {
-                DesignerItem newItem = null;
+                //DesignerItem newItem = null;
                 Object content = Activator.CreateInstance(dragObject.ObjectType);// XamlReader.Load(XmlReader.Create(new StringReader(dragObject.Xaml)));
 
                 if (content != null)
                 {
-                    newItem = new DesignerItem();
-                    newItem.Content = content;
+                    //newItem = new DesignerItem();
+                    //newItem.Content = content;
 
                     Point position = e.GetPosition(this);
 
@@ -103,12 +103,12 @@ namespace DiagramDesigner
 
                     if (dragObject.DesiredSize.HasValue)
                     {
-                        Size desiredSize = dragObject.DesiredSize.Value;
-                        newItem.Width = desiredSize.Width;
-                        newItem.Height = desiredSize.Height;
+                        //Size desiredSize = dragObject.DesiredSize.Value;
+                        //newItem.Width = desiredSize.Width;
+                        //newItem.Height = desiredSize.Height;
 
-                        x = Math.Max(0, position.X - newItem.Width/2);
-                        y = Math.Max(0, position.Y - newItem.Height/2);
+                        x = Math.Max(0, position.X - dragObject.DesiredSize.Value.Width / 2);
+                        y = Math.Max(0, position.Y - dragObject.DesiredSize.Value.Height / 2);
                     }
 
                     if (this.UseRaster)
@@ -117,20 +117,21 @@ namespace DiagramDesigner
                         y = Math.Round(y/Raster, 0)*Raster;
                     }
 
-                    DesignerCanvas.SetLeft(newItem, x);
-                    DesignerCanvas.SetTop(newItem, y);
+                    AddDesignerItem(content as FrameworkElement, new Point(x, y), dragObject.DesiredSize);
+                    //DesignerCanvas.SetLeft(newItem, x);
+                    //DesignerCanvas.SetTop(newItem, y);
 
-                    Canvas.SetZIndex(newItem, this.Children.Count);
-                    this.Children.Add(newItem); 
+                    //Canvas.SetZIndex(newItem, this.Children.Count);
+                    //this.Children.Add(newItem); 
                    
                     
-                    SetConnectorDecoratorTemplate(newItem);
+                    //SetConnectorDecoratorTemplate(newItem);
 
-                    //update selection
-                    this.SelectionService.SelectItem(newItem);
-                    newItem.Focus();
+                    ////update selection
+                    //this.SelectionService.SelectItem(newItem);
+                    //newItem.Focus();
 
-                    raiseDesignerItemAdded(content, newItem);
+                    //raiseDesignerItemAdded(content, newItem);
                 }
 
                 e.Handled = true;
@@ -160,6 +161,8 @@ namespace DiagramDesigner
             set { _raster = value; }
         }
 
+        private Dictionary<int, bool> visibleLayers = new Dictionary<int, bool>();
+
         private void raiseDesignerItemAdded(object item, DesignerItem designerItem)
         {
             var x = ItemAdded;
@@ -174,18 +177,22 @@ namespace DiagramDesigner
                 x(item, designerItem);
         }
 
-        public void AddDesignerItem(FrameworkElement item, Point position, Size size)
+        public void AddDesignerItem(FrameworkElement item, Point position, Size? size)
         {
             DesignerItem newItem = new DesignerItem();
             newItem.Content = item;
 
-            newItem.Width = size.Width;
-            newItem.Height = size.Height;
-            
+            if (size.HasValue)
+            {
+                newItem.Width = size.Value.Width;
+                newItem.Height = size.Value.Height;
+            }
+
             DesignerCanvas.SetLeft(newItem, position.X);
             DesignerCanvas.SetTop(newItem, position.Y);
 
             Canvas.SetZIndex(newItem, this.Children.Count);
+
             this.Children.Add(newItem);
             SetConnectorDecoratorTemplate(newItem);
 
@@ -194,7 +201,71 @@ namespace DiagramDesigner
             newItem.Focus();
 
             raiseDesignerItemAdded(item, newItem);
+
+            updateVisibleDesigneritems();
         }
+
+        internal void updateVisibleDesigneritems()
+        {
+            foreach (FrameworkElement child in this.Children)
+            {
+                if (child is DesignerItem)
+                {
+                    var layer = ((DesignerItem) child).Layer;
+                    bool layerVisible;
+                    if (!visibleLayers.TryGetValue(layer, out layerVisible) || layerVisible)
+                    {
+                        if (child.Visibility == System.Windows.Visibility.Hidden)
+                        {
+                            var connections =
+                                this.Children.Cast<UIElement>()
+                                    .Where(
+                                        x =>
+                                            x is Connection &&
+                                            (((Connection) x).Source.ParentDesignerItem == child ||
+                                             ((Connection) x).Sink.ParentDesignerItem == child));
+                            child.Visibility = System.Windows.Visibility.Visible;
+                            foreach (var connection in connections)
+                            {
+                                connection.Visibility = System.Windows.Visibility.Visible;    
+                            }                            
+                        }
+                    }
+                    else if (visibleLayers.TryGetValue(layer, out layerVisible) && !layerVisible)
+                    {
+                        if (child.Visibility == System.Windows.Visibility.Visible)
+                        {
+                            var connections =
+                                this.Children.Cast<UIElement>()
+                                    .Where(
+                                        x =>
+                                            x is Connection &&
+                                            (((Connection)x).Source.ParentDesignerItem == child ||
+                                             ((Connection)x).Sink.ParentDesignerItem == child));
+                            child.Visibility = System.Windows.Visibility.Hidden;
+                            foreach (var connection in connections)
+                            {
+                                connection.Visibility = System.Windows.Visibility.Hidden;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (SelectedItems.Any(x => ((FrameworkElement) x).Visibility == System.Windows.Visibility.Hidden))
+                ClearSelection();
+        }
+
+        public void SwitchLayerVisibility(int layer, bool visible)
+        {
+            if (!visibleLayers.ContainsKey(layer))
+                visibleLayers.Add(layer,visible);
+            visibleLayers[layer] = visible;
+
+            updateVisibleDesigneritems();
+        }
+
+        private List<DesignerItem> designerItems; 
 
         protected override Size MeasureOverride(Size constraint)
         {

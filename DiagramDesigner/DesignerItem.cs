@@ -114,6 +114,26 @@ namespace DiagramDesigner
 
         public bool IsFixedSize { get; set; }
 
+
+
+        public int Layer
+        {
+            get { return (int)GetValue(LayerProperty); }
+            set { SetValue(LayerProperty, value); }
+        }
+
+        public static readonly DependencyProperty LayerProperty =
+            DependencyProperty.Register("Layer", typeof(int), typeof(DesignerItem), new PropertyMetadata(0, OnLayerChanged));
+
+        private static void OnLayerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctl = d as DesignerItem;
+            var c = VisualTreeHelper.GetParent(ctl) as DesignerCanvas;
+            if (c != null)
+                c.updateVisibleDesigneritems();
+
+        }
+
         static DesignerItem()
         {
             // set the key to reference the style for this control
