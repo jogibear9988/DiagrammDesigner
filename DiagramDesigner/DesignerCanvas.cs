@@ -32,6 +32,11 @@ namespace DiagramDesigner
 
         public event SelectionChangedEventHandler SelectionChanged;
 
+        public void ClearSelection()
+        {
+            selectionService.ClearSelection();
+        }
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
