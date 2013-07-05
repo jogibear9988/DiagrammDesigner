@@ -1023,7 +1023,7 @@ namespace DiagramDesigner
             }
         }
 
-        private Connector GetConnector(object item, String connectorName)
+        public Connector GetConnector(object item, String connectorName)
         {
             DesignerItem designerItem = (from i in this.Children.OfType<DesignerItem>()
                 where i.Content == item
