@@ -1023,6 +1023,18 @@ namespace DiagramDesigner
             }
         }
 
+        private Connector GetConnector(object item, String connectorName)
+        {
+            DesignerItem designerItem = (from i in this.Children.OfType<DesignerItem>()
+                where i.Content == item
+                select i).FirstOrDefault();
+
+            Control connectorDecorator = designerItem.Template.FindName("PART_ConnectorDecorator", designerItem) as Control;
+            connectorDecorator.ApplyTemplate();
+
+            return connectorDecorator.Template.FindName(connectorName, connectorDecorator) as Connector;
+        }
+
         private Connector GetConnector(Guid itemID, String connectorName)
         {
             DesignerItem designerItem = (from item in this.Children.OfType<DesignerItem>()
