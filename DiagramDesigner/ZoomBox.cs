@@ -21,12 +21,12 @@ namespace DiagramDesigner
         }
 
         public static readonly DependencyProperty ScrollViewerProperty =
-            DependencyProperty.Register("ScrollViewer", typeof(ScrollViewer), typeof(ZoomBox));
+            DependencyProperty.Register("ScrollViewer", typeof(ScrollViewer), typeof(ZoomBox), new PropertyMetadata(OnScrollViewerChanged));
 
         private static void OnScrollViewerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var ctl = d as ScrollViewer;
-            ctl.OnApplyTemplate();
+            var ctl = d as ZoomBox;
+            ctl.findParts();
         }
 
         static ZoomBox()
@@ -34,17 +34,25 @@ namespace DiagramDesigner
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ZoomBox), new FrameworkPropertyMetadata(typeof(ZoomBox)));            
         }
 
+        private bool templateApplied = false;
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            if (this.ScrollViewer == null)
+            templateApplied = true;
+
+            findParts();
+        }
+
+        private void findParts()
+        {
+            if (this.ScrollViewer == null || !templateApplied)
                 return;
 
             this.designerCanvas = this.ScrollViewer.Content as DesignerCanvas;
             if (this.designerCanvas == null)
                 throw new Exception("DesignerCanvas must not be null!");
-            
+
             this.zoomThumb = Template.FindName("PART_ZoomThumb", this) as Thumb;
             if (this.zoomThumb == null)
                 throw new Exception("PART_ZoomThumb template is missing!");
