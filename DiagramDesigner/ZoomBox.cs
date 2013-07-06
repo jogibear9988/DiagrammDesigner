@@ -23,6 +23,12 @@ namespace DiagramDesigner
         public static readonly DependencyProperty ScrollViewerProperty =
             DependencyProperty.Register("ScrollViewer", typeof(ScrollViewer), typeof(ZoomBox));
 
+        private static void OnScrollViewerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctl = d as ScrollViewer;
+            ctl.OnApplyTemplate();
+        }
+
         static ZoomBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ZoomBox), new FrameworkPropertyMetadata(typeof(ZoomBox)));            

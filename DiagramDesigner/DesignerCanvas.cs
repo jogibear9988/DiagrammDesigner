@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +30,28 @@ namespace DiagramDesigner
         }
 
         public PathFinderTypes PathFinder { get; set; }
+
+        public int SelectionLayer
+        {
+            get
+            {
+                var d = SelectedItems.FirstOrDefault(x => x is DesignerItem) as DesignerItem;
+                if (d != null)
+                    return d.Layer;
+                return 0;
+            }
+            set
+            {
+                foreach (var selectedItem in SelectedItems)
+                {
+                    var d = selectedItem as DesignerItem;
+                    if (d != null)
+                        d.Layer = value;
+                }
+                updateVisibleDesigneritems();
+                OnPropertyChanged("SelectionLayer");
+            }
+        }
 
         public event SelectionChangedEventHandler SelectionChanged;
 
@@ -265,7 +288,8 @@ namespace DiagramDesigner
             updateVisibleDesigneritems();
         }
 
-        private List<DesignerItem> designerItems; 
+        private List<DesignerItem> designerItems;
+        
 
         protected override Size MeasureOverride(Size constraint)
         {

@@ -76,6 +76,7 @@ namespace DiagramDesigner
                     SelectionChanged(this, null);
 
                 OnPropertyChanged("SelectedItems");
+                OnPropertyChanged("SelectionLayer");
             };
 
             this.ConnectionGenerator = (source, sink, pathFinder) => new Connection(source, sink, pathFinder);
