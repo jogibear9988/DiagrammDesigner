@@ -200,11 +200,11 @@ namespace DiagramDesigner
                 x(item, designerItem);
         }
 
-        public void AddDesignerItem(FrameworkElement item, Point position, Size? size)
+        public void AddDesignerItem(FrameworkElement item, Point position, Size? size, int layer = 0)
         {
             DesignerItem newItem = new DesignerItem();
             newItem.Content = item;
-
+            newItem.Layer = layer;
             if (size.HasValue)
             {
                 newItem.Width = size.Value.Width;
