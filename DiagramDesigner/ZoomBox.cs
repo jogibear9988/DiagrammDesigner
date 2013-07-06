@@ -35,6 +35,7 @@ namespace DiagramDesigner
         }
 
         private bool templateApplied = false;
+        private bool eventsAdded = false;
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -46,6 +47,14 @@ namespace DiagramDesigner
 
         private void findParts()
         {
+            if (eventsAdded)
+            {
+                this.designerCanvas.LayoutUpdated -= this.DesignerCanvas_LayoutUpdated;
+                this.zoomThumb.DragDelta -= this.Thumb_DragDelta;
+                this.zoomSlider.ValueChanged -= this.ZoomSlider_ValueChanged;
+                eventsAdded = false;
+            }
+
             if (this.ScrollViewer == null || !templateApplied)
                 return;
 
@@ -65,11 +74,10 @@ namespace DiagramDesigner
             if (this.zoomSlider == null)
                 throw new Exception("PART_ZoomSlider template is missing!");
 
-            this.designerCanvas.LayoutUpdated += new EventHandler(this.DesignerCanvas_LayoutUpdated);
-
-            this.zoomThumb.DragDelta += new DragDeltaEventHandler(this.Thumb_DragDelta);
-
-            this.zoomSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(this.ZoomSlider_ValueChanged);
+            this.designerCanvas.LayoutUpdated += this.DesignerCanvas_LayoutUpdated;
+            this.zoomThumb.DragDelta += this.Thumb_DragDelta;
+            this.zoomSlider.ValueChanged += this.ZoomSlider_ValueChanged;
+            eventsAdded = true;
 
             this.scaleTransform = new ScaleTransform();
             this.designerCanvas.LayoutTransform = this.scaleTransform;
@@ -77,40 +85,51 @@ namespace DiagramDesigner
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            double scale = e.NewValue / e.OldValue;
+            if (this.ScrollViewer != null)
+            {
+                double scale = e.NewValue/e.OldValue;
 
-            double halfViewportHeight = this.ScrollViewer.ViewportHeight / 2;
-            double newVerticalOffset = ((this.ScrollViewer.VerticalOffset + halfViewportHeight) * scale - halfViewportHeight);
+                double halfViewportHeight = this.ScrollViewer.ViewportHeight/2;
+                double newVerticalOffset = ((this.ScrollViewer.VerticalOffset + halfViewportHeight)*scale -
+                                            halfViewportHeight);
 
-            double halfViewportWidth = this.ScrollViewer.ViewportWidth / 2;
-            double newHorizontalOffset = ((this.ScrollViewer.HorizontalOffset + halfViewportWidth) * scale - halfViewportWidth);
+                double halfViewportWidth = this.ScrollViewer.ViewportWidth/2;
+                double newHorizontalOffset = ((this.ScrollViewer.HorizontalOffset + halfViewportWidth)*scale -
+                                              halfViewportWidth);
 
-            this.scaleTransform.ScaleX *= scale;
-            this.scaleTransform.ScaleY *= scale;
+                this.scaleTransform.ScaleX *= scale;
+                this.scaleTransform.ScaleY *= scale;
 
-            this.ScrollViewer.ScrollToHorizontalOffset(newHorizontalOffset);
-            this.ScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
+                this.ScrollViewer.ScrollToHorizontalOffset(newHorizontalOffset);
+                this.ScrollViewer.ScrollToVerticalOffset(newVerticalOffset);
+            }
         }
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            double scale, xOffset, yOffset;
-            this.InvalidateScale(out scale, out xOffset, out yOffset);
+            if (this.ScrollViewer != null)
+            {
+                double scale, xOffset, yOffset;
+                this.InvalidateScale(out scale, out xOffset, out yOffset);
 
-            this.ScrollViewer.ScrollToHorizontalOffset(this.ScrollViewer.HorizontalOffset + e.HorizontalChange / scale);
-            this.ScrollViewer.ScrollToVerticalOffset(this.ScrollViewer.VerticalOffset + e.VerticalChange / scale);
+                this.ScrollViewer.ScrollToHorizontalOffset(this.ScrollViewer.HorizontalOffset + e.HorizontalChange/scale);
+                this.ScrollViewer.ScrollToVerticalOffset(this.ScrollViewer.VerticalOffset + e.VerticalChange/scale);
+            }
         }
 
         private void DesignerCanvas_LayoutUpdated(object sender, EventArgs e)
         {
-            double scale, xOffset, yOffset;
-            this.InvalidateScale(out scale, out xOffset, out yOffset);
+            if (this.ScrollViewer != null)
+            {
+                double scale, xOffset, yOffset;
+                this.InvalidateScale(out scale, out xOffset, out yOffset);
 
-            this.zoomThumb.Width = this.ScrollViewer.ViewportWidth * scale;
-            this.zoomThumb.Height = this.ScrollViewer.ViewportHeight * scale;
+                this.zoomThumb.Width = this.ScrollViewer.ViewportWidth*scale;
+                this.zoomThumb.Height = this.ScrollViewer.ViewportHeight*scale;
 
-            Canvas.SetLeft(this.zoomThumb, xOffset + this.ScrollViewer.HorizontalOffset * scale);
-            Canvas.SetTop(this.zoomThumb, yOffset + this.ScrollViewer.VerticalOffset * scale);
+                Canvas.SetLeft(this.zoomThumb, xOffset + this.ScrollViewer.HorizontalOffset*scale);
+                Canvas.SetTop(this.zoomThumb, yOffset + this.ScrollViewer.VerticalOffset*scale);
+            }
         }
 
         private void InvalidateScale(out double scale, out double xOffset, out double yOffset)
