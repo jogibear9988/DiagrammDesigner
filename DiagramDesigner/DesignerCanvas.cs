@@ -230,47 +230,34 @@ namespace DiagramDesigner
 
         internal void updateVisibleDesigneritems()
         {
+            bool layerVisible;
             foreach (FrameworkElement child in this.Children)
             {
                 if (child is DesignerItem)
                 {
                     var layer = ((DesignerItem) child).Layer;
-                    bool layerVisible;
+                    
                     if (!visibleLayers.TryGetValue(layer, out layerVisible) || layerVisible)
                     {
-                        if (child.Visibility == System.Windows.Visibility.Hidden)
-                        {
-                            var connections =
-                                this.Children.Cast<UIElement>()
-                                    .Where(
-                                        x =>
-                                            x is Connection &&
-                                            (((Connection) x).Source.ParentDesignerItem == child ||
-                                             ((Connection) x).Sink.ParentDesignerItem == child));
-                            child.Visibility = System.Windows.Visibility.Visible;
-                            foreach (var connection in connections)
-                            {
-                                connection.Visibility = System.Windows.Visibility.Visible;    
-                            }                            
-                        }
+                        child.Visibility = System.Windows.Visibility.Visible;
                     }
                     else if (visibleLayers.TryGetValue(layer, out layerVisible) && !layerVisible)
                     {
-                        if (child.Visibility == System.Windows.Visibility.Visible)
-                        {
-                            var connections =
-                                this.Children.Cast<UIElement>()
-                                    .Where(
-                                        x =>
-                                            x is Connection &&
-                                            (((Connection)x).Source.ParentDesignerItem == child ||
-                                             ((Connection)x).Sink.ParentDesignerItem == child));
-                            child.Visibility = System.Windows.Visibility.Hidden;
-                            foreach (var connection in connections)
-                            {
-                                connection.Visibility = System.Windows.Visibility.Hidden;
-                            }
-                        }
+                        child.Visibility = System.Windows.Visibility.Hidden;                 
+                    }
+                }
+                else if (child is Connection)
+                {
+                    var connection = child as Connection;
+                    if (
+                                    (!visibleLayers.TryGetValue(connection.Source.ParentDesignerItem.Layer,
+                                        out layerVisible) || layerVisible) &&
+                                    (!visibleLayers.TryGetValue(connection.Sink.ParentDesignerItem.Layer,
+                                        out layerVisible) || layerVisible))
+                        connection.Visibility = System.Windows.Visibility.Visible;
+                    else
+                    {
+                        connection.Visibility = System.Windows.Visibility.Hidden;
                     }
                 }
             }
