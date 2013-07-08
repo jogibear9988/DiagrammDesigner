@@ -141,6 +141,7 @@
     <Compile Include="DesignerItem.cs" />
     <Compile Include="IGroupable.cs" />
     <Compile Include="ISelectable.cs" />
+    <Compile Include="IZIndex.cs" />
     <Compile Include="PathFinder\PathFinderTypes.cs" />
     <Compile Include="PathFinder\StraightPathFinder.cs" />
     <Compile Include="PathFinder\IPathFinder.cs" />

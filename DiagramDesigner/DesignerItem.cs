@@ -12,7 +12,7 @@ namespace DiagramDesigner
     [TemplatePart(Name = "PART_ResizeDecorator", Type = typeof(Control))]
     [TemplatePart(Name = "PART_ConnectorDecorator", Type = typeof(Control))]
     [TemplatePart(Name = "PART_ContentPresenter", Type = typeof(ContentPresenter))]
-    public class DesignerItem : ContentControl, ISelectable, IGroupable
+    public class DesignerItem : ContentControl, IZIndex, ISelectable, IGroupable
     {             
         #region ID
         private Guid id;
@@ -133,6 +133,15 @@ namespace DiagramDesigner
                 c.updateVisibleDesigneritems();
 
         }
+        
+        public int ZIndex
+        {
+            get { return (int)GetValue(ZIndexProperty); }
+            set { SetValue(ZIndexProperty, value); }
+        }
+
+        public static readonly DependencyProperty ZIndexProperty =
+            DependencyProperty.Register("ZIndex", typeof(int), typeof(DesignerItem), new PropertyMetadata(0));
 
         static DesignerItem()
         {

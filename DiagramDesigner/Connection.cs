@@ -10,7 +10,7 @@ using DiagramDesigner.PathFinder;
 
 namespace DiagramDesigner
 {
-    public class Connection : Control, ISelectable, INotifyPropertyChanged
+    public class Connection : Control, IZIndex, ISelectable, INotifyPropertyChanged
     {
         private Adorner connectionAdorner;
 
@@ -324,6 +324,18 @@ namespace DiagramDesigner
             DependencyProperty.Register("ShowShadow", typeof(bool), typeof(Connection), new PropertyMetadata(false));
         
         #endregion
+
+
+
+        public int ZIndex
+        {
+            get { return (int)GetValue(ZIndexProperty); }
+            set { SetValue(ZIndexProperty, value); }
+        }
+
+        public static readonly DependencyProperty ZIndexProperty =
+            DependencyProperty.Register("ZIndex", typeof(int), typeof(Connection), new PropertyMetadata(0));
+
         
         static Connection()
         {

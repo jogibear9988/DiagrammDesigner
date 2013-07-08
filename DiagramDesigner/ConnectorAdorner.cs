@@ -68,7 +68,7 @@ namespace DiagramDesigner
                 if (designerCanvas.ConnectionStyle != null)
                     newConnection.Style = designerCanvas.ConnectionStyle;
 
-                Canvas.SetZIndex(newConnection, designerCanvas.Children.Count);
+                this.designerCanvas.setZIndex(newConnection, designerCanvas.Children.Count);
                 this.designerCanvas.Children.Add(newConnection);
                 
             }

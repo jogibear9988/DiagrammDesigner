@@ -141,7 +141,8 @@ namespace DiagramDesigner
                 Connector sinkConnector = GetConnector(sinkID, sinkConnectorName);
 
                 Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
-                Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
+                //Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
+                connection.ZIndex = Int32.Parse(connectionXML.Element("zIndex").Value);
                 this.Children.Add(connection);
             }
         }
@@ -266,7 +267,8 @@ namespace DiagramDesigner
                     Connector sinkConnector = GetConnector(newSinkID, sinkConnectorName);
 
                     Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
-                    Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
+                    //Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
+                    connection.ZIndex = Int32.Parse(connectionXML.Element("zIndex").Value);
                     this.Children.Add(connection);
 
                     SelectionService.AddToSelection(connection);
@@ -336,7 +338,8 @@ namespace DiagramDesigner
             Canvas.SetTop(groupItem, rect.Top);
             Canvas groupCanvas = new Canvas();
             groupItem.Content = groupCanvas;
-            Canvas.SetZIndex(groupItem, this.Children.Count);
+            //Canvas.SetZIndex(groupItem, this.Children.Count);
+            groupItem.ZIndex = this.Children.Count;
             this.Children.Add(groupItem);
 
             foreach (DesignerItem item in items)
@@ -397,28 +400,45 @@ namespace DiagramDesigner
 
         #region BringForward Command
 
+        internal int getZIndex(UIElement element)
+        {
+            var zi = element as IZIndex;
+            if (zi != null)
+                return zi.ZIndex;
+            return Canvas.GetZIndex(element);
+        }
+
+        internal void setZIndex(UIElement element, int zindex)
+        {
+            var zi = element as IZIndex;
+            if (zi != null)
+                zi.ZIndex = zindex;
+            else
+                Canvas.SetZIndex(element, zindex);
+        }
+
         private void BringForward_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             List<UIElement> ordered = (from item in SelectionService.CurrentSelection
-                                       orderby Canvas.GetZIndex(item as UIElement) descending
+                                       orderby getZIndex(item as UIElement) descending
                                        select item as UIElement).ToList();
 
             int count = this.Children.Count;
 
             for (int i = 0; i < ordered.Count; i++)
             {
-                int currentIndex = Canvas.GetZIndex(ordered[i]);
+                int currentIndex = getZIndex(ordered[i]);
                 int newIndex = Math.Min(count - 1 - i, currentIndex + 1);
                 if (currentIndex != newIndex)
                 {
-                    Canvas.SetZIndex(ordered[i], newIndex);
-                    IEnumerable<UIElement> it = this.Children.OfType<UIElement>().Where(item => Canvas.GetZIndex(item) == newIndex);
+                    setZIndex(ordered[i], newIndex);
+                    IEnumerable<UIElement> it = this.Children.OfType<UIElement>().Where(item => getZIndex(item) == newIndex);
 
                     foreach (UIElement elm in it)
                     {
                         if (elm != ordered[i])
                         {
-                            Canvas.SetZIndex(elm, currentIndex);
+                            setZIndex(elm, currentIndex);
                             break;
                         }
                     }
@@ -439,11 +459,11 @@ namespace DiagramDesigner
         private void BringToFront_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             List<UIElement> selectionSorted = (from item in SelectionService.CurrentSelection
-                                               orderby Canvas.GetZIndex(item as UIElement) ascending
+                                               orderby getZIndex(item as UIElement) ascending
                                                select item as UIElement).ToList();
 
             List<UIElement> childrenSorted = (from UIElement item in this.Children
-                                              orderby Canvas.GetZIndex(item as UIElement) ascending
+                                              orderby getZIndex(item as UIElement) ascending
                                               select item as UIElement).ToList();
 
             int i = 0;
@@ -452,12 +472,12 @@ namespace DiagramDesigner
             {
                 if (selectionSorted.Contains(item))
                 {
-                    int idx = Canvas.GetZIndex(item);
-                    Canvas.SetZIndex(item, childrenSorted.Count - selectionSorted.Count + j++);
+                    int idx = getZIndex(item);
+                    setZIndex(item, childrenSorted.Count - selectionSorted.Count + j++);
                 }
                 else
                 {
-                    Canvas.SetZIndex(item, i++);
+                    setZIndex(item, i++);
                 }
             }
         }
@@ -469,25 +489,25 @@ namespace DiagramDesigner
         private void SendBackward_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             List<UIElement> ordered = (from item in SelectionService.CurrentSelection
-                                       orderby Canvas.GetZIndex(item as UIElement) ascending
+                                       orderby getZIndex(item as UIElement) ascending
                                        select item as UIElement).ToList();
 
             int count = this.Children.Count;
 
             for (int i = 0; i < ordered.Count; i++)
             {
-                int currentIndex = Canvas.GetZIndex(ordered[i]);
+                int currentIndex = getZIndex(ordered[i]);
                 int newIndex = Math.Max(i, currentIndex - 1);
                 if (currentIndex != newIndex)
                 {
-                    Canvas.SetZIndex(ordered[i], newIndex);
-                    IEnumerable<UIElement> it = this.Children.OfType<UIElement>().Where(item => Canvas.GetZIndex(item) == newIndex);
+                    setZIndex(ordered[i], newIndex);
+                    IEnumerable<UIElement> it = this.Children.OfType<UIElement>().Where(item => getZIndex(item) == newIndex);
 
                     foreach (UIElement elm in it)
                     {
                         if (elm != ordered[i])
                         {
-                            Canvas.SetZIndex(elm, currentIndex);
+                            setZIndex(elm, currentIndex);
                             break;
                         }
                     }
@@ -502,11 +522,11 @@ namespace DiagramDesigner
         private void SendToBack_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             List<UIElement> selectionSorted = (from item in SelectionService.CurrentSelection
-                                               orderby Canvas.GetZIndex(item as UIElement) ascending
+                                               orderby getZIndex(item as UIElement) ascending
                                                select item as UIElement).ToList();
 
             List<UIElement> childrenSorted = (from UIElement item in this.Children
-                                              orderby Canvas.GetZIndex(item as UIElement) ascending
+                                              orderby getZIndex(item as UIElement) ascending
                                               select item as UIElement).ToList();
             int i = 0;
             int j = 0;
@@ -514,13 +534,13 @@ namespace DiagramDesigner
             {
                 if (selectionSorted.Contains(item))
                 {
-                    int idx = Canvas.GetZIndex(item);
-                    Canvas.SetZIndex(item, j++);
+                    int idx = getZIndex(item);
+                    setZIndex(item, j++);
 
                 }
                 else
                 {
-                    Canvas.SetZIndex(item, selectionSorted.Count + i++);
+                    setZIndex(item, selectionSorted.Count + i++);
                 }
             }
         }        
@@ -857,7 +877,7 @@ namespace DiagramDesigner
                                                   new XElement("Width", item.Width),
                                                   new XElement("Height", item.Height),
                                                   new XElement("ID", item.ID),
-                                                  new XElement("zIndex", Canvas.GetZIndex(item)),
+                                                  new XElement("zIndex", getZIndex(item)),
                                                   new XElement("IsGroup", item.IsGroup),
                                                   new XElement("ParentID", item.ParentID),
                                                   new XElement("Content", contentXaml)
@@ -879,7 +899,7 @@ namespace DiagramDesigner
                                       new XElement("SourceArrowSymbol", connection.SourceArrowSymbol),
                                       new XElement("SinkArrowSymbol", connection.SinkArrowSymbol),
                                       new XElement("PathFinder", connection.PathFinder),
-                                      new XElement("zIndex", Canvas.GetZIndex(connection))
+                                      new XElement("zIndex", getZIndex(connection))
                                      )
                                   );
 
@@ -895,7 +915,7 @@ namespace DiagramDesigner
             item.IsGroup = Boolean.Parse(itemXML.Element("IsGroup").Value);
             Canvas.SetLeft(item, Double.Parse(itemXML.Element("Left").Value, CultureInfo.InvariantCulture) + OffsetX);
             Canvas.SetTop(item, Double.Parse(itemXML.Element("Top").Value, CultureInfo.InvariantCulture) + OffsetY);
-            Canvas.SetZIndex(item, Int32.Parse(itemXML.Element("zIndex").Value));
+            SetZIndex(item, Int32.Parse(itemXML.Element("zIndex").Value));
             Object content = XamlReader.Load(XmlReader.Create(new StringReader(itemXML.Element("Content").Value)));
             item.Content = content;
             return item;
@@ -983,12 +1003,12 @@ namespace DiagramDesigner
         private void UpdateZIndex()
         {
             List<UIElement> ordered = (from UIElement item in this.Children
-                                       orderby Canvas.GetZIndex(item as UIElement)
+                                       orderby getZIndex(item as UIElement)
                                        select item as UIElement).ToList();
 
             for (int i = 0; i < ordered.Count; i++)
             {
-                Canvas.SetZIndex(ordered[i], i);
+                setZIndex(ordered[i], i);
             }
         }
 

@@ -128,7 +128,8 @@
     <Style TargetType="{x:Type s:DesignerItem}">
         <Setter Property="MinWidth" Value="10"/>
         <Setter Property="MinHeight" Value="10"/>
-        <Setter Property="SnapsToDevicePixels" Value="True"/>        
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Panel.ZIndex" Value="{Binding ZIndex, RelativeSource={RelativeSource Self}}"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type s:DesignerItem}">

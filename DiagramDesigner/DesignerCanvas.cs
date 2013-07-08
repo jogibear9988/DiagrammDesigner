@@ -214,7 +214,8 @@ namespace DiagramDesigner
             DesignerCanvas.SetLeft(newItem, position.X);
             DesignerCanvas.SetTop(newItem, position.Y);
 
-            Canvas.SetZIndex(newItem, this.Children.Count);
+            //Canvas.SetZIndex(newItem, this.Children.Count);
+            newItem.ZIndex = this.Children.Count;
 
             this.Children.Add(newItem);
             SetConnectorDecoratorTemplate(newItem);
