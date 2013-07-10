@@ -521,28 +521,7 @@ namespace DiagramDesigner
 
         private void SendToBack_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            List<UIElement> selectionSorted = (from item in SelectionService.CurrentSelection
-                                               orderby getZIndex(item as UIElement) ascending
-                                               select item as UIElement).ToList();
-
-            List<UIElement> childrenSorted = (from UIElement item in this.Children
-                                              orderby getZIndex(item as UIElement) ascending
-                                              select item as UIElement).ToList();
-            int i = 0;
-            int j = 0;
-            foreach (UIElement item in childrenSorted)
-            {
-                if (selectionSorted.Contains(item))
-                {
-                    int idx = getZIndex(item);
-                    setZIndex(item, j++);
-
-                }
-                else
-                {
-                    setZIndex(item, selectionSorted.Count + i++);
-                }
-            }
+            SendItemsToBack(SelectionService.CurrentSelection);            
         }        
 
         #endregion

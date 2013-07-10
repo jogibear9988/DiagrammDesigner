@@ -200,6 +200,32 @@ namespace DiagramDesigner
                 x(item, designerItem);
         }
 
+        public void SendItemsToBack(IEnumerable<ISelectable> items)
+        {
+            List<UIElement> selectionSorted = (from item in items
+                                               orderby getZIndex(item as UIElement) ascending
+                                               select item as UIElement).ToList();
+
+            List<UIElement> childrenSorted = (from UIElement item in this.Children
+                                              orderby getZIndex(item as UIElement) ascending
+                                              select item as UIElement).ToList();
+            int i = 0;
+            int j = 0;
+            foreach (UIElement item in childrenSorted)
+            {
+                if (selectionSorted.Contains(item))
+                {
+                    int idx = getZIndex(item);
+                    setZIndex(item, j++);
+
+                }
+                else
+                {
+                    setZIndex(item, selectionSorted.Count + i++);
+                }
+            }
+        }     
+
         public void AddDesignerItem(FrameworkElement item, Point position, Size? size, int layer = 0)
         {
             DesignerItem newItem = new DesignerItem();
