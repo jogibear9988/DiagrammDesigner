@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -58,6 +59,35 @@ namespace DiagramDesigner
             }
         }
 
+        private bool _isSourceConnector = true;
+        public bool IsSourceConnector
+        {
+            get { return _isSourceConnector; }
+            set { _isSourceConnector = value; OnPropertyChanged("IsSourceConnector"); }
+        }
+
+        private bool _onlyOneConnectionCanStart;
+        public bool OnlyOneConnectionCanStart
+        {
+            get { return _onlyOneConnectionCanStart; }
+            set { _onlyOneConnectionCanStart = value; OnPropertyChanged("OnlyOneConnectionCanStart"); }
+        }
+
+        private bool _isSinkConnector = true;
+        public bool IsSinkConnector
+        {
+            get { return _isSinkConnector; }
+            set { _isSinkConnector = value; OnPropertyChanged("IsSinkConnector"); }
+        }
+
+        private bool _onlyOneConnectionCanEnd;
+        public bool OnlyOneConnectionCanEnd
+        {
+            get { return _onlyOneConnectionCanEnd; }
+            set { _onlyOneConnectionCanEnd = value; OnPropertyChanged("OnlyOneConnectionCanEnd"); }
+        }
+
+
         static Connector()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(typeof(Connector)));            
@@ -103,18 +133,22 @@ namespace DiagramDesigner
             // but if mouse button is pressed and start point value is set we do have one
             if (this.dragStartPoint.HasValue)
             {
-                // create connection adorner 
-                DesignerCanvas canvas = GetDesignerCanvas(this);
-                if (canvas != null)
+                if (this.IsSourceConnector &&
+                    (!this.OnlyOneConnectionCanStart || !this.Connections.Any(x => Equals(x.Source, this))))
                 {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
-                    if (adornerLayer != null)
+                    // create connection adorner 
+                    DesignerCanvas canvas = GetDesignerCanvas(this);
+                    if (canvas != null)
                     {
-                        ConnectorAdorner adorner = new ConnectorAdorner(canvas, this);
-                        if (adorner != null)
+                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
+                        if (adornerLayer != null)
                         {
-                            adornerLayer.Add(adorner);
-                            e.Handled = true;
+                            ConnectorAdorner adorner = new ConnectorAdorner(canvas, this);
+                            if (adorner != null)
+                            {
+                                adornerLayer.Add(adorner);
+                                e.Handled = true;
+                            }
                         }
                     }
                 }

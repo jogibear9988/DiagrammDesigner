@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -59,18 +60,21 @@ namespace DiagramDesigner
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (HitConnector != null)
+            if (HitConnector != null && HitConnector.IsSinkConnector &&
+                (!HitConnector.OnlyOneConnectionCanEnd || !HitConnector.Connections.Any(x=> Equals(x.Sink, HitConnector))))
+                 
             {
                 Connector sourceConnector = this.sourceConnector;
                 Connector sinkConnector = this.HitConnector;
-                Connection newConnection = designerCanvas.ConnectionGenerator(sourceConnector, sinkConnector, designerCanvas.PathFinder);
+                Connection newConnection = designerCanvas.ConnectionGenerator(sourceConnector, sinkConnector,
+                    designerCanvas.PathFinder);
 
                 if (designerCanvas.ConnectionStyle != null)
                     newConnection.Style = designerCanvas.ConnectionStyle;
 
                 this.designerCanvas.setZIndex(newConnection, designerCanvas.Children.Count);
                 this.designerCanvas.Children.Add(newConnection);
-                
+
             }
             if (HitDesignerItem != null)
             {
