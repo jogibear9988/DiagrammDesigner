@@ -39,10 +39,10 @@ namespace DiagramDesigner
         {
             designerItems = new List<DesignerItem>();
 
-            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.New, New_Executed));
-            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open_Executed));
-            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, Save_Executed));
-            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Print, Print_Executed));
+            //this.CommandBindings.Add(new CommandBinding(ApplicationCommands.New, New_Executed));
+            //this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open_Executed));
+            //this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, Save_Executed));
+            //this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Print, Print_Executed));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Cut, Cut_Executed, Cut_Enabled));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Copy, Copy_Executed, Copy_Enabled));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, Paste_Executed, Paste_Enabled));
