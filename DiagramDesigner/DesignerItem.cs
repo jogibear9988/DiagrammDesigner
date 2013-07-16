@@ -114,6 +114,7 @@ namespace DiagramDesigner
 
         public bool IsFixedSize { get; set; }
 
+        public Control ConnectorDecorator { get; private set; }
 
 
         public int Layer
@@ -171,6 +172,8 @@ namespace DiagramDesigner
                 if (template != null)
                     thumb.Template = template;
             }
+
+            ConnectorDecorator = this.GetTemplateChild("PART_ConnectorDecorator") as Control;
             
             base.OnApplyTemplate();
         }
