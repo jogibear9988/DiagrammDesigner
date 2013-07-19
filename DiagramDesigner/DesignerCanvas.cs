@@ -224,9 +224,9 @@ namespace DiagramDesigner
                     setZIndex(item, selectionSorted.Count + i++);
                 }
             }
-        }     
+        }
 
-        public void AddDesignerItem(FrameworkElement item, Point position, Size? size, int layer = 0)
+        public DesignerItem AddDesignerItem(FrameworkElement item, Point position, Size? size, int layer = 0)
         {
             DesignerItem newItem = new DesignerItem();
             newItem.Content = item;
@@ -253,6 +253,8 @@ namespace DiagramDesigner
             raiseDesignerItemAdded(item, newItem);
 
             updateVisibleDesigneritems();
+
+            return newItem;
         }
 
         internal void updateVisibleDesigneritems()
