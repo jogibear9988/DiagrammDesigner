@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -447,24 +448,30 @@ namespace DiagramDesigner
                     Point pathEndPoint, pathTangentAtEndPoint;
                     Point pathMidPoint, pathTangentAtMidPoint;
 
-                    // the PathGeometry.GetPointAtFractionLength method gets the point and a tangent vector 
-                    // on PathGeometry at the specified fraction of its length
-                    this.PathGeometry.GetPointAtFractionLength(0, out pathStartPoint, out pathTangentAtStartPoint);
-                    this.PathGeometry.GetPointAtFractionLength(1, out pathEndPoint, out pathTangentAtEndPoint);
-                    this.PathGeometry.GetPointAtFractionLength(0.5, out pathMidPoint, out pathTangentAtMidPoint);
+                    var fg = pathGeometry.Figures.First();
+                    var seg = fg.Segments.FirstOrDefault() as PolyLineSegment;
 
-                    // get angle from tangent vector
-                    this.AnchorAngleSource = Math.Atan2(-pathTangentAtStartPoint.Y, -pathTangentAtStartPoint.X)*
-                                             (180/Math.PI);
-                    this.AnchorAngleSink = Math.Atan2(pathTangentAtEndPoint.Y, pathTangentAtEndPoint.X)*(180/Math.PI);
+                    if (seg.Points.First().X != 0 || seg.Points.First().Y != 0)
+                    {
+                        // the PathGeometry.GetPointAtFractionLength method gets the point and a tangent vector 
+                        // on PathGeometry at the specified fraction of its length
+                        this.PathGeometry.GetPointAtFractionLength(0, out pathStartPoint, out pathTangentAtStartPoint);
+                        this.PathGeometry.GetPointAtFractionLength(1, out pathEndPoint, out pathTangentAtEndPoint);
+                        this.PathGeometry.GetPointAtFractionLength(0.5, out pathMidPoint, out pathTangentAtMidPoint);
 
-                    // add some margin on source and sink side for visual reasons only
-                    //pathStartPoint.Offset(-pathTangentAtStartPoint.X * 5, -pathTangentAtStartPoint.Y * 5);
-                    //pathEndPoint.Offset(pathTangentAtEndPoint.X * 5, pathTangentAtEndPoint.Y * 5);
+                        // get angle from tangent vector
+                        this.AnchorAngleSource = Math.Atan2(-pathTangentAtStartPoint.Y, -pathTangentAtStartPoint.X)*
+                                                 (180/Math.PI);
+                        this.AnchorAngleSink = Math.Atan2(pathTangentAtEndPoint.Y, pathTangentAtEndPoint.X)*(180/Math.PI);
 
-                    this.AnchorPositionSource = pathStartPoint;
-                    this.AnchorPositionSink = pathEndPoint;
-                    this.LabelPosition = pathMidPoint;
+                        // add some margin on source and sink side for visual reasons only
+                        //pathStartPoint.Offset(-pathTangentAtStartPoint.X * 5, -pathTangentAtStartPoint.Y * 5);
+                        //pathEndPoint.Offset(pathTangentAtEndPoint.X * 5, pathTangentAtEndPoint.Y * 5);
+
+                        this.AnchorPositionSource = pathStartPoint;
+                        this.AnchorPositionSink = pathEndPoint;
+                        this.LabelPosition = pathMidPoint;
+                    }
                 }
                 catch (Exception ex)
                 { }
