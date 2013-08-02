@@ -434,6 +434,8 @@ namespace DiagramDesigner
             base.OnApplyTemplate();
 
             templateApplied = true;
+
+            UpdateAnchorPosition();
         } 
         private void UpdateAnchorPosition()
         {
