@@ -961,8 +961,10 @@ namespace DiagramDesigner
 
                 foreach (Connector connector in connectors)
                 {
-                    foreach (Connection con in connector.Connections)
+                    foreach (Connection con in connector.Connections.ToList())
                     {
+                        con.Source.Connections.Remove(con);
+                        con.Sink.Connections.Remove(con);
                         this.Children.Remove(con);
                     }
                 }
