@@ -8,7 +8,7 @@ using System.Windows.Media;
 namespace DiagramDesigner
 {
     // Represents a selectable item in the Toolbox/>.
-    public class ToolboxItem : ContentControl
+    public class ToolboxItem : ListBoxItem
     {
         public static Size GetDesiredSize(DependencyObject obj)
         {

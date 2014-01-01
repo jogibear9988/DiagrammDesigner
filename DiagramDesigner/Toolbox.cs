@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace DiagramDesigner
 {
     // Implements ItemsControl for ToolboxItems    
-    public class Toolbox : ItemsControl
+    public class Toolbox : ListBox
     {
         static Toolbox()
         {
