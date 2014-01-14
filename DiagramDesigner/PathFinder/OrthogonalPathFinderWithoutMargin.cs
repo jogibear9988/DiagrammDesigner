@@ -12,6 +12,17 @@ namespace DiagramDesigner.PathFinder
             margin = 20;
         }
 
+        public override Point GetTextPosition(Point anchorSource, Point anchorSink, List<Point> points)
+        {
+            if (points != null && points.Count>0)
+            {
+                var wr = points.Count/2;
+                return points[wr-1];
+            }
+
+            return new Point(0, 0);
+        }
+
         public override List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine)
         {
             List<Point> linePoints = new List<Point>();

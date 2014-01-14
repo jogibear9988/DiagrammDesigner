@@ -10,5 +10,7 @@ namespace DiagramDesigner.PathFinder
     {
         List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine);
         List<Point> GetConnectionLine(ConnectorInfo source, Point sinkPoint, ConnectorOrientation preferredOrientation);
+
+        Point GetTextPosition(Point anchorSource, Point anchorSink, List<Point> points);
     }
 }

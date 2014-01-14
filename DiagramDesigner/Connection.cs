@@ -195,14 +195,8 @@ namespace DiagramDesigner
         {
             get
             {
-                if (AnchorPositionSource != null && AnchorPositionSink != null)
-                {
-                    var x = (anchorPositionSource.X + anchorPositionSink.X)/2;
-                    var y = (anchorPositionSource.Y + anchorPositionSink.Y)/2;
-                    return new Point(Math.Abs(x), Math.Abs(y));
-                }
-
-                return new Point(0,0);
+                return PathFinderHelper.GetPathFinder(this.pathFinder)
+                    .GetTextPosition(AnchorPositionSource, AnchorPositionSink, pointsList);                
             }            
         }
 
@@ -408,12 +402,14 @@ namespace DiagramDesigner
             }
         }
 
+        protected List<Point> pointsList;
+
         private void UpdatePathGeometry()
         {
             if (Source != null && Sink != null)
             {
                 PathGeometry geometry = new PathGeometry();
-                var pointsList = PathFinderHelper.GetPathFinder(this.pathFinder).GetConnectionLine(Source.GetInfo(), Sink.GetInfo(), true);
+                pointsList = PathFinderHelper.GetPathFinder(this.pathFinder).GetConnectionLine(Source.GetInfo(), Sink.GetInfo(), true);
                 if (pointsList.Count > 0)
                 {
                     PathFigure figure = new PathFigure();

@@ -15,6 +15,18 @@ namespace DiagramDesigner.PathFinder
     {
         protected int margin = 20;
 
+        public virtual Point GetTextPosition(Point anchorSource, Point anchorSink, List<Point> points)
+        {
+            if (anchorSource != null && anchorSink != null)
+            {
+                var x = (anchorSource.X + anchorSink.X) / 2;
+                var y = (anchorSource.Y + anchorSink.Y) / 2;
+                return new Point(Math.Abs(x), Math.Abs(y));
+            }
+
+            return new Point(0, 0);
+        }
+
         public virtual List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine)
         {
             List<Point> linePoints = new List<Point>();
