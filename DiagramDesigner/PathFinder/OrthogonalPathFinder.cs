@@ -13,9 +13,9 @@ namespace DiagramDesigner.PathFinder
     // Helper class to provide an orthogonal connection path
     internal class OrthogonalPathFinder : IPathFinder
     {
-        private const int margin = 20;
+        protected int margin = 20;
 
-        public List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine)
+        public virtual List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine)
         {
             List<Point> linePoints = new List<Point>();
 
@@ -292,7 +292,7 @@ namespace DiagramDesigner.PathFinder
             return linePoints;
         }
 
-        private static List<Point> OptimizeLinePoints(List<Point> linePoints, Rect[] rectangles, ConnectorOrientation sourceOrientation, ConnectorOrientation sinkOrientation)
+        protected static List<Point> OptimizeLinePoints(List<Point> linePoints, Rect[] rectangles, ConnectorOrientation sourceOrientation, ConnectorOrientation sinkOrientation)
         {
             List<Point> points = new List<Point>();
             int cut = 0;
@@ -376,7 +376,7 @@ namespace DiagramDesigner.PathFinder
             return points;
         }
 
-        private static ConnectorOrientation GetOrientation(Point p1, Point p2)
+        protected static ConnectorOrientation GetOrientation(Point p1, Point p2)
         {
             if (p1.X == p2.X)
             {
@@ -392,10 +392,11 @@ namespace DiagramDesigner.PathFinder
                 else
                     return ConnectorOrientation.Left;
             }
+
             throw new Exception("Failed to retrieve orientation");
         }
 
-        private static Orientation GetOrientation(ConnectorOrientation sourceOrientation)
+        protected static Orientation GetOrientation(ConnectorOrientation sourceOrientation)
         {
             switch (sourceOrientation)
             {
@@ -412,7 +413,7 @@ namespace DiagramDesigner.PathFinder
             }
         }
 
-        private static Point GetNearestNeighborSource(ConnectorInfo source, Point endPoint, Rect rectSource, Rect rectSink, out bool flag)
+        protected static Point GetNearestNeighborSource(ConnectorInfo source, Point endPoint, Rect rectSource, Rect rectSink, out bool flag)
         {
             Point n1, n2; // neighbors
             GetNeighborCorners(source.Orientation, rectSource, out n1, out n2);
@@ -441,7 +442,7 @@ namespace DiagramDesigner.PathFinder
             }
         }
 
-        private static Point GetNearestNeighborSource(ConnectorInfo source, Point endPoint, Rect rectSource, out bool flag)
+        protected static Point GetNearestNeighborSource(ConnectorInfo source, Point endPoint, Rect rectSource, out bool flag)
         {
             Point n1, n2; // neighbors
             GetNeighborCorners(source.Orientation, rectSource, out n1, out n2);
@@ -458,7 +459,7 @@ namespace DiagramDesigner.PathFinder
             }
         }
 
-        private static Point GetNearestVisibleNeighborSink(Point currentPoint, Point endPoint, ConnectorInfo sink, Rect rectSource, Rect rectSink)
+        protected static Point GetNearestVisibleNeighborSink(Point currentPoint, Point endPoint, ConnectorInfo sink, Rect rectSource, Rect rectSink)
         {
             Point s1, s2; // neighbors on sink side
             GetNeighborCorners(sink.Orientation, rectSink, out s1, out s2);
@@ -500,7 +501,7 @@ namespace DiagramDesigner.PathFinder
             }
         }
 
-        private static bool IsPointVisible(Point fromPoint, Point targetPoint, Rect[] rectangles)
+        protected static bool IsPointVisible(Point fromPoint, Point targetPoint, Rect[] rectangles)
         {
             foreach (Rect rect in rectangles)
             {
@@ -510,7 +511,7 @@ namespace DiagramDesigner.PathFinder
             return true;
         }
 
-        private static bool IsRectVisible(Point fromPoint, Rect targetRect, Rect[] rectangles)
+        protected static bool IsRectVisible(Point fromPoint, Rect targetRect, Rect[] rectangles)
         {
             if (IsPointVisible(fromPoint, targetRect.TopLeft, rectangles))
                 return true;
@@ -527,13 +528,13 @@ namespace DiagramDesigner.PathFinder
             return false;
         }
 
-        private static bool RectangleIntersectsLine(Rect rect, Point startPoint, Point endPoint)
+        protected static bool RectangleIntersectsLine(Rect rect, Point startPoint, Point endPoint)
         {
             rect.Inflate(-1, -1);
             return rect.IntersectsWith(new Rect(startPoint, endPoint));
         }
 
-        private static void GetOppositeCorners(ConnectorOrientation orientation, Rect rect, out Point n1, out Point n2)
+        protected static void GetOppositeCorners(ConnectorOrientation orientation, Rect rect, out Point n1, out Point n2)
         {
             switch (orientation)
             {
@@ -554,7 +555,7 @@ namespace DiagramDesigner.PathFinder
             }
         }
 
-        private static void GetNeighborCorners(ConnectorOrientation orientation, Rect rect, out Point n1, out Point n2)
+        protected static void GetNeighborCorners(ConnectorOrientation orientation, Rect rect, out Point n1, out Point n2)
         {
             switch (orientation)
             {
@@ -574,8 +575,8 @@ namespace DiagramDesigner.PathFinder
                     throw new Exception("No neighour corners found!");
             }
         }
-       
-        private static void CheckPathEnd(ConnectorInfo source, ConnectorInfo sink, bool showLastLine, List<Point> linePoints)
+
+        protected static void CheckPathEnd(ConnectorInfo source, ConnectorInfo sink, bool showLastLine, List<Point> linePoints)
         {
             if (showLastLine)
             {
@@ -627,7 +628,7 @@ namespace DiagramDesigner.PathFinder
             }
         }
 
-        private static ConnectorOrientation GetOpositeOrientation(ConnectorOrientation connectorOrientation)
+        protected static ConnectorOrientation GetOpositeOrientation(ConnectorOrientation connectorOrientation)
         {
             switch (connectorOrientation)
             {

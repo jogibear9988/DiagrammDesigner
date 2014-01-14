@@ -10,6 +10,7 @@ namespace DiagramDesigner.PathFinder
     {
         private static StraightPathFinder straightPathFinder = new StraightPathFinder();
         private static OrthogonalPathFinder orthogonalPathFinder = new OrthogonalPathFinder();
+        private static OrthogonalPathFinder orthogonalPathFinderWithoutMargin = new OrthogonalPathFinderWithoutMargin();
 
         public static IPathFinder GetPathFinder(PathFinderTypes pathFinder)
         {
@@ -17,6 +18,8 @@ namespace DiagramDesigner.PathFinder
             {
                 case PathFinderTypes.OrthogonalPathFinder:
                     return orthogonalPathFinder;
+                case PathFinderTypes.OrthogonalPathFinderWithoutMargin:
+                    return orthogonalPathFinderWithoutMargin;
                 default:
                     return straightPathFinder;
             }
@@ -63,7 +66,7 @@ namespace DiagramDesigner.PathFinder
             }
 
             return offsetPoint;
-        }
+        }        
 
     }
 }

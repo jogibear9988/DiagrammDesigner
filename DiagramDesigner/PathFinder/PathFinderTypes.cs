@@ -9,5 +9,6 @@ namespace DiagramDesigner.PathFinder
     {
         StraightPathFinder,
         OrthogonalPathFinder,
+        OrthogonalPathFinderWithoutMargin,
     }
 }
