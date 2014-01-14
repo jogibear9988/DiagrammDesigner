@@ -54,7 +54,7 @@ namespace DiagramDesigner
                 DragObject dataObject = new DragObject();
                 dataObject.ObjectType = this.Content.GetType();
 
-                WrapPanel panel = VisualTreeHelper.GetParent(this) as WrapPanel;
+                var panel = VisualTreeHelper.GetParent(this) as Panel;
                 if (panel != null)
                 {
                     dataObject.DesiredSize = GetDesiredSize((DependencyObject)this.Content);
@@ -63,7 +63,8 @@ namespace DiagramDesigner
                     if (dataObject.DesiredSize == Size.Empty)
                     {
                         double scale = 1.3;
-                        dataObject.DesiredSize = new Size(panel.ItemWidth*scale, panel.ItemHeight*scale);
+                        if (panel is WrapPanel)
+                            dataObject.DesiredSize = new Size(((WrapPanel)panel).ItemWidth * scale, ((WrapPanel)panel).ItemHeight * scale);
                     }
                 }
 
