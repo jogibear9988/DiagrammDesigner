@@ -131,8 +131,10 @@ namespace DiagramDesigner
             var ctl = d as DesignerItem;
             var c = VisualTreeHelper.GetParent(ctl) as DesignerCanvas;
             if (c != null)
+            {
                 c.updateVisibleDesigneritems();
-
+                c.raiseLayerChanged(ctl, ctl.Layer);
+            }
         }
         
         public int ZIndex

@@ -167,6 +167,9 @@ namespace DiagramDesigner
         public delegate void DesignerItemAddedDelegate(object item, DesignerItem designerItem);
         public event DesignerItemAddedDelegate ItemAdded;
 
+        public delegate void DesignerItemLayerChangedDelegate(object item, DesignerItem designerItem, int newLayer);
+        public event DesignerItemLayerChangedDelegate ItemLayerChanged;
+
         public delegate void DesignerItemRemovedDelegate(object item, DesignerItem designerItem);
         public event DesignerItemRemovedDelegate ItemRemoved;
 
@@ -182,6 +185,13 @@ namespace DiagramDesigner
         {
             get { return _raster; }
             set { _raster = value; }
+        }
+
+        internal void raiseLayerChanged(DesignerItem item, int layer)
+        {
+            var e = ItemLayerChanged;
+            if (e != null)
+                e(this, item, layer);
         }
 
         private Dictionary<int, bool> visibleLayers = new Dictionary<int, bool>();
