@@ -947,6 +947,9 @@ namespace DiagramDesigner
         {
             foreach (Connection connection in SelectionService.CurrentSelection.OfType<Connection>())
             {
+                connection.Source.Connections.Remove(connection);
+                connection.Sink.Connections.Remove(connection);
+
                 this.Children.Remove(connection);
 
                 raiseDesignerItemRemoved(connection, null);
