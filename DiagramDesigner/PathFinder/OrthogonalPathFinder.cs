@@ -405,7 +405,9 @@ namespace DiagramDesigner.PathFinder
                     return ConnectorOrientation.Left;
             }
 
-            throw new Exception("Failed to retrieve orientation");
+            return ConnectorOrientation.Bottom;
+
+            //throw new Exception("Failed to retrieve orientation");
         }
 
         protected static Orientation GetOrientation(ConnectorOrientation sourceOrientation)
@@ -421,7 +423,8 @@ namespace DiagramDesigner.PathFinder
                 case ConnectorOrientation.Bottom:
                     return Orientation.Vertical;
                 default:
-                    throw new Exception("Unknown ConnectorOrientation");
+                    return Orientation.Vertical;
+                    //throw new Exception("Unknown ConnectorOrientation");
             }
         }
 
