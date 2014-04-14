@@ -140,7 +140,7 @@ namespace DiagramDesigner
                         y = Math.Round(y/Raster, 0)*Raster;
                     }
 
-                    AddDesignerItem(content as FrameworkElement, new Point(x, y), dragObject.DesiredSize);
+                    AddDesignerItem(content as FrameworkElement, new Point(x, y), dragObject.DesiredSize, 0, dragObject.InsertInBackground);
                     //DesignerCanvas.SetLeft(newItem, x);
                     //DesignerCanvas.SetTop(newItem, y);
 
@@ -236,7 +236,7 @@ namespace DiagramDesigner
             }
         }
 
-        public DesignerItem AddDesignerItem(FrameworkElement item, Point position, Size? size, int layer = 0)
+        public DesignerItem AddDesignerItem(FrameworkElement item, Point position, Size? size, int layer = 0, bool insertInBackground = false)
         {
             DesignerItem newItem = new DesignerItem();
             newItem.Content = item;
@@ -253,7 +253,13 @@ namespace DiagramDesigner
             //Canvas.SetZIndex(newItem, this.Children.Count);
             newItem.ZIndex = this.Children.Count;
 
-            this.Children.Add(newItem);
+            if (insertInBackground)
+            {
+                newItem.ZIndex = 0;
+                this.Children.Insert(0, newItem);
+            }
+            else
+                this.Children.Add(newItem);
             SetConnectorDecoratorTemplate(newItem);
 
             //update selection

@@ -23,6 +23,22 @@ namespace DiagramDesigner
         public static readonly DependencyProperty DesiredSizeProperty =
             DependencyProperty.RegisterAttached("DesiredSize", typeof(Size), typeof(ToolboxItem), new PropertyMetadata(null));
 
+
+
+        public static bool GetInsertInBackground(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(InsertInBackgroundProperty);
+        }
+
+        public static void SetInsertInBackground(DependencyObject obj, bool value)
+        {
+            obj.SetValue(InsertInBackgroundProperty, value);
+        }
+
+        public static readonly DependencyProperty InsertInBackgroundProperty =
+            DependencyProperty.RegisterAttached("InsertInBackground", typeof(bool), typeof(ToolboxItem), new PropertyMetadata(false));
+
+        
         
         // caches the start point of the drag operation
         private Point? dragStartPoint = null;
@@ -59,6 +75,7 @@ namespace DiagramDesigner
                 {
                     dataObject.DesiredSize = GetDesiredSize((DependencyObject)this.Content);
 
+                    dataObject.InsertInBackground = GetInsertInBackground((DependencyObject) this.Content);
                     // desired size for DesignerCanvas is the stretched Toolbox item size
                     if (dataObject.DesiredSize == Size.Empty)
                     {
@@ -84,5 +101,8 @@ namespace DiagramDesigner
         // Defines width and height of the DesignerItem
         // when this DragObject is dropped on the DesignerCanvas
         public Size? DesiredSize { get; set; }
+
+        //Inserts the Item on Top of the Children list, so that it is in Background
+        public bool InsertInBackground { get; set; }
     }
 }
