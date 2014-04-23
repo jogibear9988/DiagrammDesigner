@@ -460,6 +460,8 @@ namespace DiagramDesigner
                                                  (180/Math.PI);
                         this.AnchorAngleSink = Math.Atan2(pathTangentAtEndPoint.Y, pathTangentAtEndPoint.X)*(180/Math.PI);
 
+                        this.AnchorAngleSink = (this.AnchorAngleSink % 180 == 0 && this.AnchorAngleSink != 0) ? 0 : this.AnchorAngleSink;
+
                         // add some margin on source and sink side for visual reasons only
                         //pathStartPoint.Offset(-pathTangentAtStartPoint.X * 5, -pathTangentAtStartPoint.Y * 5);
                         //pathEndPoint.Offset(pathTangentAtEndPoint.X * 5, pathTangentAtEndPoint.Y * 5);
