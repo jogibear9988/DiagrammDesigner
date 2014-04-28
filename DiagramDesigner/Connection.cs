@@ -20,7 +20,7 @@ namespace DiagramDesigner
         public Guid ID { get; set; }
 
         // source connector
-        private Connector source;
+        protected Connector source;
         public Connector Source
         {
             get
@@ -51,7 +51,7 @@ namespace DiagramDesigner
         }
 
         // sink connector
-        private Connector sink;
+        protected Connector sink;
         public Connector Sink
         {
             get { return sink; }
