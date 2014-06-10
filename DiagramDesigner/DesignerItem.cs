@@ -16,10 +16,13 @@ namespace DiagramDesigner
     {             
         #region ID
         private Guid id;
+
         public Guid ID
         {
             get { return id; }
+            set { id = value; }
         }
+
         #endregion
 
         #region ParentID

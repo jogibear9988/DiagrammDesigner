@@ -996,7 +996,7 @@ namespace DiagramDesigner
             }
         }
 
-        private static Rect GetBoundingRectangle(IEnumerable<DesignerItem> items)
+        public static Rect GetBoundingRectangle(IEnumerable<DesignerItem> items)
         {
             double x1 = Double.MaxValue;
             double y1 = Double.MaxValue;
