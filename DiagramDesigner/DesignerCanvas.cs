@@ -294,12 +294,14 @@ namespace DiagramDesigner
                 else if (child is Connection)
                 {
                     var connection = child as Connection;
-                    if (
-                                    (!visibleLayers.TryGetValue(connection.Source.ParentDesignerItem.Layer,
-                                        out layerVisible) || layerVisible) &&
-                                    (!visibleLayers.TryGetValue(connection.Sink.ParentDesignerItem.Layer,
-                                        out layerVisible) || layerVisible))
+                    if (connection.Source == null || connection.Sink == null)
+                    {
                         connection.Visibility = System.Windows.Visibility.Visible;
+                    }
+                    else if ((!visibleLayers.TryGetValue(connection.Source.ParentDesignerItem.Layer, out layerVisible) || layerVisible) && (!visibleLayers.TryGetValue(connection.Sink.ParentDesignerItem.Layer, out layerVisible) || layerVisible))
+                    {
+                        connection.Visibility = System.Windows.Visibility.Visible;
+                    }
                     else
                     {
                         connection.Visibility = System.Windows.Visibility.Hidden;
