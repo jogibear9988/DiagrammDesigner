@@ -276,8 +276,10 @@
     <ItemsControl.Items>
 
             <controls:Test1 s:ToolboxItem.DesiredSize="88,130" s:ToolboxItem.InsertInBackground="True" />
-        
-      <Path Style="{StaticResource Process}" ToolTip="Process">
+
+            <controls:Test1 s:ToolboxItem.DesiredSize="200,130" s:ToolboxItem.InsertInBackground="True" />
+
+            <Path Style="{StaticResource Process}" ToolTip="Process">
         <!--<s:DesignerItem.DragThumbTemplate>
           <ControlTemplate>
             <Path Style="{StaticResource Process_DragThumb}"/>

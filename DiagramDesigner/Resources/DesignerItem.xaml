@@ -82,14 +82,14 @@
     </Style>
 
     <!-- ConnectorDecoratorTemplate Default Template -->
-    <ControlTemplate x:Key="ConnectorDecoratorTemplate" TargetType="{x:Type Control}">
+    <!--<ControlTemplate x:Key="ConnectorDecoratorTemplate" TargetType="{x:Type Control}">
         <Grid Margin="-5">
             <s:Connector x:Name="Left" Orientation="Left" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             <s:Connector x:Name="Top" Orientation="Top" VerticalAlignment="Top" HorizontalAlignment="Center"/>
             <s:Connector x:Name="Right" Orientation="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
             <s:Connector x:Name="Bottom" Orientation="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
         </Grid>
-    </ControlTemplate>
+    </ControlTemplate>-->
 
     <!-- ResizeDecorator Default Template -->
     <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="{x:Type Control}">
@@ -151,7 +151,7 @@
                         <!-- PART_ConnectorDecorator -->
                         <Control x:Name="PART_ConnectorDecorator"
                                  Visibility="Hidden"
-                                 Template="{StaticResource ConnectorDecoratorTemplate}"/>
+                                 />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource Self},Path=IsGroup}">
