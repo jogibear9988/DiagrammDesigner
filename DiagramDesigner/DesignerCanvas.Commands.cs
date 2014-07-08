@@ -219,13 +219,16 @@ namespace DiagramDesigner
             {
                 Guid oldID = new Guid(itemXML.Element("ID").Value);
                 Guid newID = Guid.NewGuid();
-                mappingOldToNewIDs.Add(oldID, newID);
+                //mappingOldToNewIDs.Add(oldID, newID);
                 DesignerItem item = DeserializeDesignerItem(itemXML, newID, offsetX, offsetY);
                 this.Children.Add(item);
                 SetConnectorDecoratorTemplate(item);
                 newItems.Add(item);
 
                 raiseDesignerItemAdded(item.Content, item);
+
+                mappingOldToNewIDs.Add(oldID, item.ID);
+                //mappingOldToNewIDs[oldID] = item.ID;
             }
 
             // update group hierarchy
