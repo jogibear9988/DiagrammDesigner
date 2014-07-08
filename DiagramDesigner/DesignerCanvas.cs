@@ -263,12 +263,21 @@ namespace DiagramDesigner
             SetConnectorDecoratorTemplate(newItem);
 
             //update selection
-            this.SelectionService.SelectItem(newItem);
-            newItem.Focus();
+            //this.SelectionService.SelectItem(newItem);
+            //newItem.Focus();
 
             raiseDesignerItemAdded(item, newItem);
 
-            updateVisibleDesigneritems();
+            bool layerVisible = false;
+            if (!visibleLayers.TryGetValue(layer, out layerVisible) || layerVisible)
+            {
+                item.Visibility = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                item.Visibility = System.Windows.Visibility.Hidden;
+            }
+            //updateVisibleDesigneritems();
 
             return newItem;
         }
