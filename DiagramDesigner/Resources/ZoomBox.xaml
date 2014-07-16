@@ -218,14 +218,15 @@
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Stretch"
                                             Margin="0"
+                                            LargeChange="5"
                                             Ticks="25,50,75,100,125,150,200,300,400,500"
-                                            Minimum="25"
+                                            Minimum="5"
                                             Maximum="500"
                                             Value="100"
-                                            IsSnapToTickEnabled="True"
+                                            IsSnapToTickEnabled="False"
                                             IsMoveToPointEnabled="False" />
 
-                                    <TextBlock Text="{Binding ElementName=PART_ZoomSlider, Path=Value}"
+                                    <TextBlock Text="{Binding ElementName=PART_ZoomSlider, StringFormat=N0, Path=Value}"
                                                Grid.Column="1"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Right"
