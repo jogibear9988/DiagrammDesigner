@@ -387,7 +387,7 @@ namespace DiagramDesigner
                     designer.SelectionService.SelectItem(this);
                 }
 
-                //Focus();
+                Focus();
             }
             e.Handled = false;
         }

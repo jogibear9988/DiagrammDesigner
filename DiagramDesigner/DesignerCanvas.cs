@@ -72,7 +72,7 @@ namespace DiagramDesigner
                 // if you click directly on the canvas all 
                 // selected items are 'de-selected'
                 SelectionService.ClearSelection();
-                //Focus();
+                Focus();
                 e.Handled = true;
             }
         }
