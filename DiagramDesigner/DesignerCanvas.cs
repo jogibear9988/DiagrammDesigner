@@ -18,7 +18,7 @@ namespace DiagramDesigner
         private Point? rubberbandSelectionStartPoint = null;
 
         private SelectionService selectionService;
-        internal SelectionService SelectionService
+        public SelectionService SelectionService
         {
             get
             {

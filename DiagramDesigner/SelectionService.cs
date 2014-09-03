@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DiagramDesigner
 {
-    internal class SelectionService
+    public class SelectionService
     {
         public Action SelectionChanged;
 
@@ -27,7 +27,7 @@ namespace DiagramDesigner
             this.designerCanvas = canvas;
         }
 
-        internal void SelectItem(ISelectable item)
+        public void SelectItem(ISelectable item)
         {
             this.ClearSelection();
             this.AddToSelection(item);
@@ -35,13 +35,13 @@ namespace DiagramDesigner
             RaiseSelectionChanged();
         }
 
-        internal void RaiseSelectionChanged()
+        public void RaiseSelectionChanged()
         {
             if (SelectionChanged != null)
                 SelectionChanged();
         }
 
-        internal void AddToSelection(ISelectable item)
+        public void AddToSelection(ISelectable item)
         {
             if (item is IGroupable)
             {
@@ -60,7 +60,7 @@ namespace DiagramDesigner
             }
         }
 
-        internal void RemoveFromSelection(ISelectable item)
+        public void RemoveFromSelection(ISelectable item)
         {
             if (item is IGroupable)
             {
@@ -79,13 +79,13 @@ namespace DiagramDesigner
             }
         }
 
-        internal void ClearSelection()
+        public void ClearSelection()
         {
             CurrentSelection.ForEach(item => item.IsSelected = false);
             CurrentSelection.Clear();
         }
 
-        internal void SelectAll()
+        public void SelectAll()
         {
             ClearSelection();
             CurrentSelection.AddRange(designerCanvas.Children.OfType<ISelectable>());
