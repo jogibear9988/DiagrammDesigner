@@ -260,6 +260,23 @@ namespace DiagramDesigner
             }
         }
 
+        private double strokeThickness;
+        public double StrokeThickness
+        {
+            get
+            {
+                return strokeThickness;
+            }
+            set
+            {
+                if (strokeThickness != value)
+                {
+                    strokeThickness = value;
+                    OnPropertyChanged("StrokeThickness");
+                }
+            }
+        }
+
         // pattern of dashes and gaps that is used to outline the connection path
         private DoubleCollection strokeDashArray;
         public DoubleCollection StrokeDashArray
