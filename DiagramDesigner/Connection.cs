@@ -260,7 +260,7 @@ namespace DiagramDesigner
             }
         }
 
-        private double strokeThickness;
+        private double strokeThickness = 2.0;
         public double StrokeThickness
         {
             get
