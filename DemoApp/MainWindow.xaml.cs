@@ -23,5 +23,10 @@ namespace DemoApp
         {
             InitializeComponent();
         }
+
+        private void DesignerScrollViewer_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

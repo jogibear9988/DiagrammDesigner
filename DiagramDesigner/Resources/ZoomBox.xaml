@@ -219,7 +219,6 @@
                                             HorizontalAlignment="Stretch"
                                             Margin="0"
                                             LargeChange="5"
-                                            Ticks="25,50,75,100,125,150,200,300,400,500"
                                             Minimum="5"
                                             Maximum="500"
                                             Value="100"

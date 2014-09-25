@@ -47,7 +47,7 @@
                     <ScrollViewer Name="DesignerScrollViewer"
                                   Background="Transparent"
                                   HorizontalScrollBarVisibility="Auto"
-                                  VerticalScrollBarVisibility="Auto">
+                                  VerticalScrollBarVisibility="Auto" RequestBringIntoView="DesignerScrollViewer_RequestBringIntoView">
                     <diagramDesigner:DesignerCanvas Focusable="true" x:Name="MyDesigner"
                             Background="{StaticResource WindowBackgroundBrush}"
                             Margin="10" FocusVisualStyle="{x:Null}"
