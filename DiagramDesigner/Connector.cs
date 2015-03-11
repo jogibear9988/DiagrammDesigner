@@ -141,6 +141,13 @@ namespace DiagramDesigner
                     DesignerCanvas canvas = GetDesignerCanvas(this);
                     if (canvas != null)
                     {
+                        var connections = canvas.Children.OfType<Connection>();
+                        foreach (var connection in connections)
+                        {
+                            connection.IsHitTestVisible = false;
+                        }
+
+
                         AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(canvas);
                         if (adornerLayer != null)
                         {

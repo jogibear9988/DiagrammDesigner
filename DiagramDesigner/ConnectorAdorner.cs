@@ -60,6 +60,12 @@ namespace DiagramDesigner
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
+            var connections = designerCanvas.Children.OfType<Connection>();
+            foreach (var connection in connections)
+            {
+                connection.IsHitTestVisible = true;
+            }
+
             if (HitConnector != null && HitConnector.IsSinkConnector &&
                 (!HitConnector.OnlyOneConnectionCanEnd || !HitConnector.Connections.Any(x=> Equals(x.Sink, HitConnector))))
                  

@@ -165,7 +165,7 @@ namespace DiagramDesigner
             : this(Guid.NewGuid())
         {
         }
-
+        
         public override void OnApplyTemplate()
         {
             ContentPresenter contentPresenter = this.GetTemplateChild("PART_ContentPresenter") as ContentPresenter;
