@@ -204,7 +204,17 @@ namespace DiagramDesigner
                     }
                 else if (!this.IsSelected)
                 {
-                    designer.SelectionService.SelectItem(this);
+                    var elm = Mouse.DirectlyOver;
+                    var connector = elm as Connector;
+                    var parent = elm as DependencyObject;
+                    while (parent != null && connector == null)
+                    {
+                        parent = VisualTreeHelper.GetParent(parent);
+                        connector = parent as Connector;
+                    }
+
+                    if (connector == null)
+                        designer.SelectionService.SelectItem(this);
                 }
                 Focus();
             }

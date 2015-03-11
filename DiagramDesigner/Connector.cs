@@ -116,7 +116,7 @@ namespace DiagramDesigner
             DesignerCanvas canvas = GetDesignerCanvas(this);
             if (canvas != null)
             {
-                canvas.SelectionService.SelectItem(this.ParentDesignerItem);
+                //canvas.SelectionService.SelectItem(this.ParentDesignerItem);
                 // position relative to DesignerCanvas
                 this.dragStartPoint = new Point?(e.GetPosition(canvas));
                 e.Handled = true;
