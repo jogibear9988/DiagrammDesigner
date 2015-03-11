@@ -81,6 +81,14 @@ namespace DiagramDesigner
 
             this.scaleTransform = new ScaleTransform();
             this.designerCanvas.LayoutTransform = this.scaleTransform;
+            this.designerCanvas.ScaleChanged += designerCanvas_ScaleChanged;
+        }
+
+        void designerCanvas_ScaleChanged(double scale)
+        {
+            this.zoomSlider.ValueChanged -= this.ZoomSlider_ValueChanged;
+            zoomSlider.Value = scale;
+            this.zoomSlider.ValueChanged += this.ZoomSlider_ValueChanged;
         }
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

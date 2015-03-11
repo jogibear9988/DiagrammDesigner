@@ -82,12 +82,9 @@ namespace DiagramDesigner
             this.ConnectionGenerator = (source, sink, pathFinder) => new Connection(source, sink, pathFinder);
 
             this.RequestBringIntoView += DesignerCanvas_RequestBringIntoView;
-        }
 
-        private void DesignerCanvas_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
-        {
-            e.Handled = true;
-        }
+            this.PreviewMouseWheel += DesignerCanvas_PreviewMouseWheel;
+        }      
 
         public List<ISelectable> SelectedItems
         {

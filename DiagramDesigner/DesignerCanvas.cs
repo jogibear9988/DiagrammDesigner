@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
 using System.Xml;
 using DiagramDesigner.PathFinder;
 
@@ -78,6 +79,29 @@ namespace DiagramDesigner
         }
 
         public Style ConnectionStyle { get; set; }
+
+        internal event Action<double> ScaleChanged;
+
+        void DesignerCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                var scale = e.Delta*0.002 + ((ScaleTransform) this.LayoutTransform).ScaleX;
+                scale = scale < 0.05 ? 0.05 : scale;
+                scale = scale > 5 ? 5 : scale;
+                ((ScaleTransform)this.LayoutTransform).ScaleX = scale;
+                ((ScaleTransform)this.LayoutTransform).ScaleY = scale;
+                e.Handled = true;
+
+                if (ScaleChanged != null)
+                    ScaleChanged(scale*100);
+            }
+        }
+
+        private void DesignerCanvas_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            e.Handled = true;
+        }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
