@@ -56,6 +56,29 @@ namespace DiagramDesigner
             this.dragStartPoint = new Point?(e.GetPosition(this));
         }
 
+        public virtual DragObject GetDragObject()
+        {
+            DragObject dataObject = new DragObject();
+            dataObject.ObjectType = this.Content.GetType();
+
+            var panel = VisualTreeHelper.GetParent(this) as Panel;
+            if (panel != null)
+            {
+                dataObject.DesiredSize = GetDesiredSize((DependencyObject)this.Content);
+
+                dataObject.InsertInBackground = GetInsertInBackground((DependencyObject)this.Content);
+                // desired size for DesignerCanvas is the stretched Toolbox item size
+                if (dataObject.DesiredSize == Size.Empty)
+                {
+                    double scale = 1.3;
+                    if (panel is WrapPanel)
+                        dataObject.DesiredSize = new Size(((WrapPanel)panel).ItemWidth * scale, ((WrapPanel)panel).ItemHeight * scale);
+                }
+            }
+
+            return dataObject;
+        }
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -67,24 +90,7 @@ namespace DiagramDesigner
                 // XamlWriter.Save() has limitations in exactly what is serialized,
                 // see SDK documentation; short term solution only;
                 //string xamlString = XamlWriter.Save(this.Content);
-                DragObject dataObject = new DragObject();
-                dataObject.ObjectType = this.Content.GetType();
-
-                var panel = VisualTreeHelper.GetParent(this) as Panel;
-                if (panel != null)
-                {
-                    dataObject.DesiredSize = GetDesiredSize((DependencyObject)this.Content);
-
-                    dataObject.InsertInBackground = GetInsertInBackground((DependencyObject) this.Content);
-                    // desired size for DesignerCanvas is the stretched Toolbox item size
-                    if (dataObject.DesiredSize == Size.Empty)
-                    {
-                        double scale = 1.3;
-                        if (panel is WrapPanel)
-                            dataObject.DesiredSize = new Size(((WrapPanel)panel).ItemWidth * scale, ((WrapPanel)panel).ItemHeight * scale);
-                    }
-                }
-
+                var dataObject = GetDragObject();
                 DragDrop.DoDragDrop(this, dataObject, DragDropEffects.Copy);
 
                 e.Handled = true;
@@ -97,6 +103,8 @@ namespace DiagramDesigner
     {
         // Xaml string that represents the serialized content
         public Type ObjectType { get; set; }
+
+        public string AdditionalInfo { get; set; }
 
         // Defines width and height of the DesignerItem
         // when this DragObject is dropped on the DesignerCanvas

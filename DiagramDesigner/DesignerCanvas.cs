@@ -129,6 +129,11 @@ namespace DiagramDesigner
             e.Handled = true;
         }
 
+        public virtual object CreateInstanceFromDragObject(DragObject dragObject)
+        {
+            return Activator.CreateInstance(dragObject.ObjectType);
+        }
+
         protected override void OnDrop(DragEventArgs e)
         {
             base.OnDrop(e);
@@ -136,13 +141,10 @@ namespace DiagramDesigner
             if (dragObject != null) // && !String.IsNullOrEmpty(dragObject.Xaml))
             {
                 //DesignerItem newItem = null;
-                Object content = Activator.CreateInstance(dragObject.ObjectType);// XamlReader.Load(XmlReader.Create(new StringReader(dragObject.Xaml)));
+                Object content = CreateInstanceFromDragObject(dragObject);
 
                 if (content != null)
                 {
-                    //newItem = new DesignerItem();
-                    //newItem.Content = content;
-
                     Point position = e.GetPosition(this);
 
                     var x = Math.Max(0, position.X);
@@ -150,10 +152,6 @@ namespace DiagramDesigner
 
                     if (dragObject.DesiredSize.HasValue)
                     {
-                        //Size desiredSize = dragObject.DesiredSize.Value;
-                        //newItem.Width = desiredSize.Width;
-                        //newItem.Height = desiredSize.Height;
-
                         x = Math.Max(0, position.X - dragObject.DesiredSize.Value.Width / 2);
                         y = Math.Max(0, position.Y - dragObject.DesiredSize.Value.Height / 2);
                     }
@@ -165,20 +163,6 @@ namespace DiagramDesigner
                     }
 
                     AddDesignerItem(content as FrameworkElement, new Point(x, y), dragObject.DesiredSize, 0, dragObject.InsertInBackground);
-                    //DesignerCanvas.SetLeft(newItem, x);
-                    //DesignerCanvas.SetTop(newItem, y);
-
-                    //Canvas.SetZIndex(newItem, this.Children.Count);
-                    //this.Children.Add(newItem); 
-                   
-                    
-                    //SetConnectorDecoratorTemplate(newItem);
-
-                    ////update selection
-                    //this.SelectionService.SelectItem(newItem);
-                    //newItem.Focus();
-
-                    //raiseDesignerItemAdded(content, newItem);
                 }
 
                 e.Handled = true;
