@@ -172,6 +172,9 @@ namespace DiagramDesigner
         public delegate Connection ConnectionGeneratorDelegate(Connector source, Connector sink, PathFinderTypes pathFinderType);
         public ConnectionGeneratorDelegate ConnectionGenerator { get; set; }
 
+        public delegate void DesignerCanvasChangedDelegate();
+        public event DesignerCanvasChangedDelegate DesignerCanvasChanged;
+
         public delegate void DesignerItemAddedDelegate(object item, DesignerItem designerItem);
         public event DesignerItemAddedDelegate ItemAdded;
 
@@ -209,6 +212,15 @@ namespace DiagramDesigner
             var x = ItemAdded;
             if (x != null)
                 x(item, designerItem);
+
+            raiseDesignerCanvasChanged();
+        }
+
+        internal void raiseDesignerCanvasChanged()
+        {
+            var x = DesignerCanvasChanged;
+            if (x != null)
+                x();
         }
 
         private void raiseDesignerItemRemoved(object item, DesignerItem designerItem)
@@ -216,6 +228,8 @@ namespace DiagramDesigner
             var x = ItemRemoved;
             if (x != null)
                 x(item, designerItem);
+
+            raiseDesignerCanvasChanged();
         }
 
         public void SendItemsToBack(IEnumerable<ISelectable> items)
@@ -278,7 +292,7 @@ namespace DiagramDesigner
             //this.SelectionService.SelectItem(newItem);
             //newItem.Focus();
 
-            raiseDesignerItemAdded(item, newItem);
+            raiseDesignerItemAdded(item, newItem);            
 
             bool layerVisible = false;
             if (!visibleLayers.TryGetValue(layer, out layerVisible) || layerVisible)
@@ -292,6 +306,11 @@ namespace DiagramDesigner
             //updateVisibleDesigneritems();
 
             return newItem;
+        }
+
+        private void OnDesignerItemContentPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            raiseDesignerCanvasChanged();
         }
 
         internal void updateVisibleDesigneritems()
@@ -369,9 +388,10 @@ namespace DiagramDesigner
             }
             // add margin 
             size.Width += 10;
-            size.Height += 10;
-            return size;
-        }
+            size.Height += 10;            
+
+            return size;            
+        }        
 
         private void SetConnectorDecoratorTemplate(DesignerItem item)
         {

@@ -69,6 +69,9 @@ namespace DiagramDesigner.Controls
                         }
                     }
                 }
+
+                designer.raiseDesignerCanvasChanged();
+
                 e.Handled = true;
             }
         }
