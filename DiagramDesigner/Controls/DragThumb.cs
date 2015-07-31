@@ -58,6 +58,8 @@ namespace DiagramDesigner.Controls
                 }
 
                 designer.InvalidateMeasure();
+                designer.raiseDesignerCanvasChanged();
+
                 e.Handled = true;
             }
         }

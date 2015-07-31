@@ -81,6 +81,8 @@ namespace DiagramDesigner
                 this.designerCanvas.setZIndex(newConnection, designerCanvas.Children.Count);
                 this.designerCanvas.Children.Add(newConnection);
 
+                this.designerCanvas.raiseDesignerCanvasChanged();
+
             }
             if (HitDesignerItem != null)
             {
