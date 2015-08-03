@@ -68,7 +68,6 @@ namespace DiagramDesigner
             SelectAll.InputGestures.Add(new KeyGesture(Key.A, ModifierKeys.Control));
 
             this.AllowDrop = true;
-            Clipboard.Clear();
 
             SelectionService.SelectionChanged += () =>
             {
