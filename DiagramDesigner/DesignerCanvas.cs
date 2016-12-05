@@ -84,17 +84,20 @@ namespace DiagramDesigner
 
         void DesignerCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            if (this.LayoutTransform is ScaleTransform)
             {
-                var scale = e.Delta*0.002 + ((ScaleTransform) this.LayoutTransform).ScaleX;
-                scale = scale < 0.05 ? 0.05 : scale;
-                scale = scale > 5 ? 5 : scale;
-                ((ScaleTransform)this.LayoutTransform).ScaleX = scale;
-                ((ScaleTransform)this.LayoutTransform).ScaleY = scale;
-                e.Handled = true;
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                {
+                    var scale = e.Delta * 0.002 + ((ScaleTransform) this.LayoutTransform).ScaleX;
+                    scale = scale < 0.05 ? 0.05 : scale;
+                    scale = scale > 5 ? 5 : scale;
+                    ((ScaleTransform) this.LayoutTransform).ScaleX = scale;
+                    ((ScaleTransform) this.LayoutTransform).ScaleY = scale;
+                    e.Handled = true;
 
-                if (ScaleChanged != null)
-                    ScaleChanged(scale*100);
+                    if (ScaleChanged != null)
+                        ScaleChanged(scale * 100);
+                }
             }
         }
 
