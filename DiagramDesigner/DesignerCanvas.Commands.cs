@@ -406,7 +406,7 @@ namespace DiagramDesigner
 
         #region BringForward Command
 
-        internal int getZIndex(UIElement element)
+        protected int getZIndex(UIElement element)
         {
             var zi = element as IZIndex;
             if (zi != null)
@@ -414,7 +414,7 @@ namespace DiagramDesigner
             return Canvas.GetZIndex(element);
         }
 
-        internal void setZIndex(UIElement element, int zindex)
+        protected void setZIndex(UIElement element, int zindex)
         {
             var zi = element as IZIndex;
             if (zi != null)
