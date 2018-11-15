@@ -851,7 +851,7 @@ namespace DiagramDesigner
             return null;
         }
 
-        protected XElement SerializeDesignerItems(IEnumerable<DesignerItem> designerItems)
+        protected virtual XElement SerializeDesignerItems(IEnumerable<DesignerItem> designerItems)
         {
             XElement serializedItems = new XElement("DesignerItems",
                                        from item in designerItems
@@ -860,7 +860,7 @@ namespace DiagramDesigner
             return serializedItems;
         }
 
-        protected XElement SerializeDesignerItem(DesignerItem item)
+        protected virtual XElement SerializeDesignerItem(DesignerItem item)
         {
             var contentXaml = XamlWriter.Save(item.Content);
             return new XElement("DesignerItem",
@@ -876,7 +876,7 @@ namespace DiagramDesigner
                 );
         }
 
-        private XElement SerializeConnections(IEnumerable<Connection> connections)
+        protected virtual XElement SerializeConnections(IEnumerable<Connection> connections)
         {
             var serializedConnections = new XElement("Connections",
                            from connection in connections
