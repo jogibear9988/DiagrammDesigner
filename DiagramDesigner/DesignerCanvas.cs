@@ -30,6 +30,8 @@ namespace DiagramDesigner
             }
         }
 
+        public bool SelectionNeedsCtrl { get; set; }
+
         public PathFinderTypes PathFinder { get; set; }
 
         public int SelectionLayer
@@ -64,7 +66,7 @@ namespace DiagramDesigner
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
-            if (e.Source == this)
+            if (e.Source == this && (!SelectionNeedsCtrl || Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
                 // in case that this click is the start of a 
                 // drag operation we cache the start point
@@ -111,7 +113,7 @@ namespace DiagramDesigner
             base.OnMouseMove(e);
 
             // if mouse button is not pressed we have no drag operation, ...
-            if (e.LeftButton != MouseButtonState.Pressed)
+            if (e.LeftButton != MouseButtonState.Pressed && (!SelectionNeedsCtrl || Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 this.rubberbandSelectionStartPoint = null;
 
             // ... but if mouse button is pressed and start
@@ -128,8 +130,9 @@ namespace DiagramDesigner
                         adornerLayer.Add(adorner);
                     }
                 }
+                e.Handled = true;
             }
-            e.Handled = true;
+           
         }
 
         public virtual object CreateInstanceFromDragObject(DragObject dragObject)

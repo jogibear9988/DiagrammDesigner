@@ -48,7 +48,7 @@
                                   Background="Transparent"
                                   HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollBarVisibility="Auto" RequestBringIntoView="DesignerScrollViewer_RequestBringIntoView">
-                    <diagramDesigner:DesignerCanvas Focusable="true" x:Name="MyDesigner"
+                    <diagramDesigner:DesignerCanvas SelectionNeedsCtrl="True" Focusable="true" x:Name="MyDesigner"
                             Background="{StaticResource WindowBackgroundBrush}"
                             Margin="10" FocusVisualStyle="{x:Null}"
                             ContextMenu="{StaticResource DesignerCanvasContextMenu}"/>
