@@ -414,7 +414,7 @@ namespace DiagramDesigner
             return Canvas.GetZIndex(element);
         }
 
-        protected void setZIndex(UIElement element, int zindex)
+        protected internal void setZIndex(UIElement element, int zindex)
         {
             var zi = element as IZIndex;
             if (zi != null)
