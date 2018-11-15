@@ -851,25 +851,29 @@ namespace DiagramDesigner
             return null;
         }
 
-        private XElement SerializeDesignerItems(IEnumerable<DesignerItem> designerItems)
+        protected XElement SerializeDesignerItems(IEnumerable<DesignerItem> designerItems)
         {
             XElement serializedItems = new XElement("DesignerItems",
                                        from item in designerItems
-                                       let contentXaml = XamlWriter.Save(((DesignerItem)item).Content)
-                                       select new XElement("DesignerItem",
-                                                  new XElement("Left", Canvas.GetLeft(item)),
-                                                  new XElement("Top", Canvas.GetTop(item)),
-                                                  new XElement("Width", item.Width),
-                                                  new XElement("Height", item.Height),
-                                                  new XElement("ID", item.ID),
-                                                  new XElement("zIndex", getZIndex(item)),
-                                                  new XElement("IsGroup", item.IsGroup),
-                                                  new XElement("ParentID", item.ParentID),
-                                                  new XElement("Content", contentXaml)
-                                              )
-                                   );
+                                       select SerializeDesignerItem(item));
 
             return serializedItems;
+        }
+
+        protected XElement SerializeDesignerItem(DesignerItem item)
+        {
+            var contentXaml = XamlWriter.Save(item.Content);
+            return new XElement("DesignerItem",
+                    new XElement("Left", Canvas.GetLeft(item)),
+                    new XElement("Top", Canvas.GetTop(item)),
+                    new XElement("Width", item.Width),
+                    new XElement("Height", item.Height),
+                    new XElement("ID", item.ID),
+                    new XElement("zIndex", getZIndex(item)),
+                    new XElement("IsGroup", item.IsGroup),
+                    new XElement("ParentID", item.ParentID),
+                    new XElement("Content", contentXaml)
+                );
         }
 
         private XElement SerializeConnections(IEnumerable<Connection> connections)
