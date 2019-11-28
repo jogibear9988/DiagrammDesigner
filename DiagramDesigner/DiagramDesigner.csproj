@@ -146,6 +146,7 @@
     <Compile Include="IGroupable.cs" />
     <Compile Include="ISelectable.cs" />
     <Compile Include="IZIndex.cs" />
+    <Compile Include="MovementViewModel.cs" />
     <Compile Include="PathFinder\OrthogonalPathFinderWithoutMargin.cs" />
     <Compile Include="PathFinder\PathFinderTypes.cs" />
     <Compile Include="PathFinder\StraightPathFinder.cs" />
