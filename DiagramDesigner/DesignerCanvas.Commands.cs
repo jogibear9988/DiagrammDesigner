@@ -268,13 +268,17 @@ namespace DiagramDesigner
                     String sourceConnectorName = connectionXML.Element("SourceConnectorName").Value;
                     String sinkConnectorName = connectionXML.Element("SinkConnectorName").Value;
                     PathFinderTypes pathFinder = (PathFinderTypes)Enum.Parse(typeof(PathFinderTypes), connectionXML.Element("PathFinder").Value);
-
+                    SolidColorBrush color = (SolidColorBrush)new BrushConverter().ConvertFromString(connectionXML.Element("Color").Value);
+                    double strokeThickness = Double.Parse(connectionXML.Element("StrokeThickness")?.Value);
+                    
                     Connector sourceConnector = GetConnector(newSourceID, sourceConnectorName);
                     Connector sinkConnector = GetConnector(newSinkID, sinkConnectorName);
 
                     Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
                     //Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
                     connection.ZIndex = Int32.Parse(connectionXML.Element("zIndex").Value);
+                    connection.Color = color;
+                    connection.StrokeThickness = strokeThickness;
                     this.Children.Add(connection);
 
                     SelectionService.AddToSelection(connection);
@@ -879,18 +883,20 @@ namespace DiagramDesigner
         protected virtual XElement SerializeConnections(IEnumerable<Connection> connections)
         {
             var serializedConnections = new XElement("Connections",
-                           from connection in connections
-                           select new XElement("Connection",
-                                      new XElement("SourceID", connection.Source.ParentDesignerItem.ID),
-                                      new XElement("SinkID", connection.Sink.ParentDesignerItem.ID),
-                                      new XElement("SourceConnectorName", connection.Source.Name),
-                                      new XElement("SinkConnectorName", connection.Sink.Name),
-                                      new XElement("SourceArrowSymbol", connection.SourceArrowSymbol),
-                                      new XElement("SinkArrowSymbol", connection.SinkArrowSymbol),
-                                      new XElement("PathFinder", connection.PathFinder),
-                                      new XElement("zIndex", getZIndex(connection))
-                                     )
-                                  );
+                from connection in connections
+                select new XElement("Connection",
+                    new XElement("SourceID", connection.Source.ParentDesignerItem.ID),
+                    new XElement("SinkID", connection.Sink.ParentDesignerItem.ID),
+                    new XElement("SourceConnectorName", connection.Source.Name),
+                    new XElement("SinkConnectorName", connection.Sink.Name),
+                    new XElement("SourceArrowSymbol", connection.SourceArrowSymbol),
+                    new XElement("SinkArrowSymbol", connection.SinkArrowSymbol),
+                    new XElement("PathFinder", connection.PathFinder),
+                    new XElement("Color", connection.Color),
+                    new XElement("StrokeThickness", connection.StrokeThickness),
+                    new XElement("zIndex", getZIndex(connection))
+                )
+            );
 
             return serializedConnections;
         }

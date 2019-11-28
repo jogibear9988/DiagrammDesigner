@@ -90,7 +90,7 @@
                 <ControlTemplate TargetType="{x:Type s:Connection}">
                     <Canvas DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                     <c:ArrowPath ContextMenu="{StaticResource ConnectionContextMenu}" Name="PART_Arrow"
-                          Stroke="{TemplateBinding Foreground}" StrokeDashArray="{Binding StrokeDashArray}" StrokeThickness="{Binding StrokeThickness}"
+                          Stroke="{Binding Color}" StrokeDashArray="{Binding StrokeDashArray}" StrokeThickness="{Binding StrokeThickness}"
                           StrokeEndLineCap="Triangle"
                           SnapsToDevicePixels="True"                      
                           X1="{Binding AnchorPositionSource.X}"

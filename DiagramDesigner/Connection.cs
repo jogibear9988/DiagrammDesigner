@@ -263,6 +263,23 @@ namespace DiagramDesigner
             }
         }
 
+        private SolidColorBrush color = new SolidColorBrush(Colors.Gray);
+        public SolidColorBrush Color
+        {
+            get
+            {
+                return color;
+            }
+            set
+            {
+                if (color != value)
+                {
+                    color = value;
+                    OnPropertyChanged("Color");
+                }
+            }
+        }
+
         private double strokeThickness = 2.0;
         public double StrokeThickness
         {
