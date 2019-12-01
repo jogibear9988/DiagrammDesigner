@@ -16,7 +16,7 @@
     <PackageLicenseFile>CPOL.htm</PackageLicenseFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\CPOL.htm">
+    <None Include="..\LICENSE.md
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
