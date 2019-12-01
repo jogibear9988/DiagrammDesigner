@@ -7,6 +7,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\Images\AlignObjectsBottom.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\DiagramDesigner\DiagramDesigner.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\*.*" />
   </ItemGroup>
 </Project>
