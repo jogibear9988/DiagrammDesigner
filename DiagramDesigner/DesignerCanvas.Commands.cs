@@ -19,6 +19,8 @@ namespace DiagramDesigner
 {
     public partial class DesignerCanvas:INotifyPropertyChanged
     {
+        private IUndoable<string> diagramState = null;
+
         public static RoutedCommand Group = new RoutedCommand();
         public static RoutedCommand Ungroup = new RoutedCommand();
         public static RoutedCommand BringForward = new RoutedCommand();
@@ -34,9 +36,13 @@ namespace DiagramDesigner
         public static RoutedCommand DistributeHorizontal = new RoutedCommand();
         public static RoutedCommand DistributeVertical = new RoutedCommand();
         public static RoutedCommand SelectAll = new RoutedCommand();
+        public static RoutedCommand RotateRight = new RoutedCommand();
 
         public DesignerCanvas()
         {
+            string initialStore = this.StoreDiagram().ToString();
+            this.diagramState = new Undoable<string>(initialStore);
+
             designerItems = new List<DesignerItem>();
 
             //this.CommandBindings.Add(new CommandBinding(ApplicationCommands.New, New_Executed));
@@ -47,6 +53,8 @@ namespace DiagramDesigner
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Copy, Copy_Executed, Copy_Enabled));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, Paste_Executed, Paste_Enabled));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, Delete_Executed, Delete_Enabled));
+            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Undo, Undo_Executed, Undo_Enabled));
+            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Redo, Redo_Executed, Redo_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.Group, Group_Executed, Group_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.Ungroup, Ungroup_Executed, Ungroup_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.BringForward, BringForward_Executed, Order_Enabled));
@@ -109,7 +117,11 @@ namespace DiagramDesigner
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             XElement root = LoadSerializedDataFromFile();
+            RestoreDiagram(root);
+        }
 
+        public void RestoreDiagram(XElement root)
+        {
             if (root == null)
                 return;
 
@@ -138,7 +150,7 @@ namespace DiagramDesigner
                 String sourceConnectorName = connectionXML.Element("SourceConnectorName").Value;
                 String sinkConnectorName = connectionXML.Element("SinkConnectorName").Value;
                 PathFinderTypes pathFinder = (PathFinderTypes)Enum.Parse(typeof(PathFinderTypes), connectionXML.Element("PathFinder").Value);
-                
+
 
                 Connector sourceConnector = GetConnector(sourceID, sourceConnectorName);
                 Connector sinkConnector = GetConnector(sinkID, sinkConnectorName);
@@ -156,6 +168,12 @@ namespace DiagramDesigner
 
         private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            XElement root = StoreDiagram();
+            SaveFile(root);
+        }
+
+        public XElement StoreDiagram()
+        {
             IEnumerable<DesignerItem> designerItems = this.Children.OfType<DesignerItem>();
             IEnumerable<Connection> connections = this.Children.OfType<Connection>();
 
@@ -166,8 +184,9 @@ namespace DiagramDesigner
             root.Add(designerItemsXML);
             root.Add(connectionsXML);
 
-            SaveFile(root);
+            return root;
         }
+        
 
         #endregion
 
@@ -311,6 +330,42 @@ namespace DiagramDesigner
         private void Delete_Enabled(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = this.SelectionService.CurrentSelection.Count() > 0;
+        }
+
+        #endregion
+
+        #region Undo Command
+
+        private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.diagramState.Undo();
+            XElement diagram = XElement.Parse(this.diagramState.Value);
+            RestoreDiagram(diagram);
+
+            Console.WriteLine("Undo executed!");
+        }
+
+        private void Undo_Enabled(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.diagramState.CanUndo;
+        }
+
+        #endregion
+
+        #region Redo Command
+
+        private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.diagramState.Redo();
+            XElement diagram = XElement.Parse(this.diagramState.Value);
+            RestoreDiagram(diagram);
+
+            Console.WriteLine("Redo executed!");
+        }
+
+        private void Redo_Enabled(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.diagramState.CanRedo;
         }
 
         #endregion
@@ -794,7 +849,7 @@ namespace DiagramDesigner
         }
 
         #endregion
-
+        
         #region Helper Methods
 
         private XElement LoadSerializedDataFromFile()

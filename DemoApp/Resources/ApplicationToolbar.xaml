@@ -143,6 +143,38 @@
                         </Button.Content>
                     </Button>
                 </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,2,0,2">
+                    <Button Margin="1" Padding="2" HorizontalContentAlignment="Left"
+                            Style="{StaticResource ToolBarButtonBaseStyle}"
+                            Command="{x:Static ApplicationCommands.Undo}"
+                            CommandTarget="{Binding ElementName=MyDesigner}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/Cut.png" Width="16"/>
+                                <TextBlock Margin="3,0,3,0" Text="Undo" VerticalAlignment="Center" Grid.Column="1"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                    <Button Margin="1" Padding="2" HorizontalContentAlignment="Left"
+                            Style="{StaticResource ToolBarButtonBaseStyle}"
+                            Command="{x:Static ApplicationCommands.Redo}"
+                            CommandTarget="{Binding ElementName=MyDesigner}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/Copy.png" Width="16"/>
+                                <TextBlock Margin="3,0,3,0" Text="Redo" VerticalAlignment="Center" Grid.Column="1"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </GroupBox>
 

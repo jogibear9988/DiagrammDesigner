@@ -77,6 +77,18 @@ namespace DiagramDesigner
             }
         }
 
+        protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseLeftButtonUp(e);
+
+            string storedDiagram = this.StoreDiagram().ToString();
+            if (storedDiagram != this.diagramState.Value)
+            {
+                this.diagramState.SaveState();
+                this.diagramState.Value = storedDiagram;
+            }
+        }
+
         public Style ConnectionStyle { get; set; }
 
         internal event Action<double> ScaleChanged;
