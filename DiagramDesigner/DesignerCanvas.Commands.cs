@@ -149,7 +149,8 @@ namespace DiagramDesigner
                 String sourceConnectorName = connectionXML.Element("SourceConnectorName").Value;
                 String sinkConnectorName = connectionXML.Element("SinkConnectorName").Value;
                 PathFinderTypes pathFinder = (PathFinderTypes)Enum.Parse(typeof(PathFinderTypes), connectionXML.Element("PathFinder").Value);
-
+                SolidColorBrush color = (SolidColorBrush)new BrushConverter().ConvertFromString(connectionXML.Element("Color").Value);
+                double strokeThickness = Double.Parse(connectionXML.Element("StrokeThickness")?.Value);
 
                 Connector sourceConnector = GetConnector(sourceID, sourceConnectorName);
                 Connector sinkConnector = GetConnector(sinkID, sinkConnectorName);
@@ -157,6 +158,8 @@ namespace DiagramDesigner
                 Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
                 //Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
                 connection.ZIndex = Int32.Parse(connectionXML.Element("zIndex").Value);
+                connection.Color = color;
+                connection.StrokeThickness = strokeThickness;
                 this.Children.Add(connection);
             }
         }
@@ -961,7 +964,10 @@ namespace DiagramDesigner
             Canvas.SetLeft(item, Double.Parse(itemXML.Element("Left").Value, CultureInfo.InvariantCulture) + OffsetX);
             Canvas.SetTop(item, Double.Parse(itemXML.Element("Top").Value, CultureInfo.InvariantCulture) + OffsetY);
             SetZIndex(item, Int32.Parse(itemXML.Element("zIndex").Value));
-            Object content = XamlReader.Load(XmlReader.Create(new StringReader(itemXML.Element("Content").Value)));
+            //Object content = XamlReader.Load(XmlReader.Create());
+            var reader = new StringReader(itemXML.Element("Content").Value);
+            var xmlReader = XmlReader.Create(reader);
+            var content = XamlReader.Load(xmlReader);
             item.Content = content;
             return item;
         }
