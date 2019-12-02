@@ -345,8 +345,6 @@ namespace DiagramDesigner
             this.diagramState.Undo();
             XElement diagram = XElement.Parse(this.diagramState.Value);
             RestoreDiagram(diagram);
-
-            Console.WriteLine("Undo executed!");
         }
 
         private void Undo_Enabled(object sender, CanExecuteRoutedEventArgs e)
@@ -363,8 +361,6 @@ namespace DiagramDesigner
             this.diagramState.Redo();
             XElement diagram = XElement.Parse(this.diagramState.Value);
             RestoreDiagram(diagram);
-
-            Console.WriteLine("Redo executed!");
         }
 
         private void Redo_Enabled(object sender, CanExecuteRoutedEventArgs e)
