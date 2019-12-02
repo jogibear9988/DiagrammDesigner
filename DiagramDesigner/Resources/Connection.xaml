@@ -82,7 +82,6 @@
             </Style>
         </Style.Resources>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
-        <Setter Property="Foreground" Value="{StaticResource SolidBorderBrush}"></Setter>   
         <Setter Property="ShowShadow" Value="True"></Setter>
         <Setter Property="Panel.ZIndex" Value="{Binding ZIndex, RelativeSource={RelativeSource Self}}"></Setter>
         <Setter Property="Template">

@@ -263,7 +263,7 @@ namespace DiagramDesigner
             }
         }
 
-        private SolidColorBrush color = new SolidColorBrush(Colors.Gray);
+        private SolidColorBrush color = Brushes.Gray;
         public SolidColorBrush Color
         {
             get

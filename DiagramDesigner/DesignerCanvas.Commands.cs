@@ -36,8 +36,6 @@ namespace DiagramDesigner
         public static RoutedCommand DistributeHorizontal = new RoutedCommand();
         public static RoutedCommand DistributeVertical = new RoutedCommand();
         public static RoutedCommand SelectAll = new RoutedCommand();
-        public static RoutedCommand RotateRight = new RoutedCommand();
-        public static RoutedCommand RotateLeft = new RoutedCommand();
 
         public DesignerCanvas()
         {
@@ -67,13 +65,10 @@ namespace DiagramDesigner
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.AlignBottom, AlignBottom_Executed, Align_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.AlignLeft, AlignLeft_Executed, Align_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.AlignHorizontalCenters, AlignHorizontalCenters_Executed, Align_Enabled));
-            this.CommandBindings.Add(new CommandBinding(DesignerCanvas.AlignHorizontalCenters, AlignHorizontalCenters_Executed, Align_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.AlignRight, AlignRight_Executed, Align_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.DistributeHorizontal, DistributeHorizontal_Executed, Distribute_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.DistributeVertical, DistributeVertical_Executed, Distribute_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.SelectAll, SelectAll_Executed));
-            this.CommandBindings.Add(new CommandBinding(DesignerCanvas.RotateRight, RotateRight_Executed, RotateRight_Enabled));
-            this.CommandBindings.Add(new CommandBinding(DesignerCanvas.RotateLeft, RotateLeft_Executed, RotateLeft_Enabled));
 
             //this.InputBindings.Add(new KeyBinding(ApplicationCommands.Delete,Key.))
             ApplicationCommands.Delete.InputGestures.Add(new KeyGesture(Key.Delete));
@@ -846,64 +841,6 @@ namespace DiagramDesigner
         private void SelectAll_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             SelectionService.SelectAll();
-        }
-
-        #endregion
-
-        #region RotateRight Command
-
-        private void RotateRight_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            IEnumerable<DesignerItem> selectedDesignerItems = this.SelectionService.CurrentSelection.OfType<DesignerItem>();
-            foreach (DesignerItem item in selectedDesignerItems)
-            {
-                foreach (DesignerItem di in SelectionService.GetGroupMembers(item))
-                {
-                    double rotationAngle = 0;
-                    if (di.RenderTransform is RotateTransform rotation)
-                    {
-                        rotationAngle = rotation.Angle;
-                    }
-
-                    rotationAngle = rotationAngle + 90;
-                    di.RenderTransformOrigin = new Point(0.5, 0.5);
-                    di.RenderTransform = new RotateTransform(rotationAngle, 0.5, 0.5);
-                }
-            }
-        }
-
-        private void RotateRight_Enabled(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        #endregion
-
-        #region RotateLeft Command
-
-        private void RotateLeft_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            IEnumerable<DesignerItem> selectedDesignerItems = this.SelectionService.CurrentSelection.OfType<DesignerItem>();
-            foreach (DesignerItem item in selectedDesignerItems)
-            {
-                foreach (DesignerItem di in SelectionService.GetGroupMembers(item))
-                {
-                    double rotationAngle = 0;
-                    if (di.RenderTransform is RotateTransform rotation)
-                    {
-                        rotationAngle = rotation.Angle;
-                    }
-
-                    rotationAngle = rotationAngle - 90;
-                    di.RenderTransformOrigin = new Point(0.5, 0.5);
-                    di.RenderTransform = new RotateTransform(rotationAngle, 0.5, 0.5);
-                }
-            }
-        }
-
-        private void RotateLeft_Enabled(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
         }
 
         #endregion
