@@ -154,7 +154,7 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="Images/Cut.png" Width="16"/>
+                                <Image Source="Images/Undo.png" Width="14"/>
                                 <TextBlock Margin="3,0,3,0" Text="Undo" VerticalAlignment="Center" Grid.Column="1"/>
                             </Grid>
                         </Button.Content>
@@ -169,7 +169,7 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="Images/Copy.png" Width="16"/>
+                                <Image Source="Images/Redo.png" Width="14"/>
                                 <TextBlock Margin="3,0,3,0" Text="Redo" VerticalAlignment="Center" Grid.Column="1"/>
                             </Grid>
                         </Button.Content>
