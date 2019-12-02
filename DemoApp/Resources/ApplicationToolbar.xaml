@@ -184,6 +184,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Vertical">
                     <Border BorderBrush="{StaticResource ToolbarBorderBrush}" BorderThickness="1" CornerRadius="2" Margin="3">
@@ -265,6 +266,38 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="Images/DistributeObjectsVertical.png" Width="16"/>
                                 <TextBlock Margin="3" Text="Vertical" VerticalAlignment="Center" Grid.Column="1"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Vertical" Margin="5,0,0,0">
+                    <Button Margin="3" Padding="5" HorizontalContentAlignment="Left"
+                            Style="{StaticResource ToolBarButtonBaseStyle}"
+                            Command="{x:Static s:DesignerCanvas.RotateRight}"
+                            CommandTarget="{Binding ElementName=MyDesigner}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/Rotate_Right.png" Width="16"/>
+                                <TextBlock Margin="3" Text="Rotate Right" VerticalAlignment="Center" Grid.Column="1"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                    <Button Margin="3" Padding="5" HorizontalContentAlignment="Left"
+                            Style="{StaticResource ToolBarButtonBaseStyle}"
+                            Command="{x:Static s:DesignerCanvas.RotateLeft}"
+                            CommandTarget="{Binding ElementName=MyDesigner}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/Rotate_Left.png" Width="16"/>
+                                <TextBlock Margin="3" Text="Rotate Left" VerticalAlignment="Center" Grid.Column="1"/>
                             </Grid>
                         </Button.Content>
                     </Button>
