@@ -263,23 +263,6 @@ namespace DiagramDesigner
             }
         }
 
-        private SolidColorBrush color = Brushes.Gray;
-        public SolidColorBrush Color
-        {
-            get
-            {
-                return color;
-            }
-            set
-            {
-                if (color != value)
-                {
-                    color = value;
-                    OnPropertyChanged("Color");
-                }
-            }
-        }
-
         private double strokeThickness = 2.0;
         public double StrokeThickness
         {
@@ -354,7 +337,16 @@ namespace DiagramDesigner
 
         public static readonly DependencyProperty ShowShadowProperty =
             DependencyProperty.Register("ShowShadow", typeof(bool), typeof(Connection), new PropertyMetadata(false));
-        
+
+        public SolidColorBrush Color
+        {
+            get { return (SolidColorBrush)GetValue(ColorProperty); }
+            set { SetValue(ColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty ColorProperty =
+            DependencyProperty.Register("Color", typeof(SolidColorBrush), typeof(Connection), new PropertyMetadata(Brushes.Gray));
+
         #endregion
 
 
