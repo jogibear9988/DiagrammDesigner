@@ -236,9 +236,9 @@
                                                HorizontalAlignment="Right"
                                                Margin="1,0,2,0" />
                                     <Button Grid.Column="2" Margin="5,0,0,0">
-                                        <b:Interaction.Behaviors>
+                                        <i:Interaction.Behaviors>
                                             <behaviors:DragDropBehavior DragObject="{Binding RelativeSource={RelativeSource TemplatedParent}}" />
-                                        </b:Interaction.Behaviors>
+                                        </i:Interaction.Behaviors>
                                     </Button>
                                 </Grid>
                             </Expander.Header>
