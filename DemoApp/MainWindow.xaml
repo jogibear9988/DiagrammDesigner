@@ -4,7 +4,7 @@
         xmlns:diagramDesigner="clr-namespace:DiagramDesigner;assembly=DiagramDesigner"
         WindowStartupLocation="CenterScreen"
         Title="Diagram Designer"
-        Height="850" Width="1000">
+        Height="850" Width="1200">
 
     <Window.Resources>
         <ContextMenu x:Key="DesignerCanvasContextMenu">

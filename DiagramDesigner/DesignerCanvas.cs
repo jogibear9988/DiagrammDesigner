@@ -2,14 +2,11 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
-using System.Xml;
 using DiagramDesigner.PathFinder;
 
 namespace DiagramDesigner
@@ -77,6 +74,18 @@ namespace DiagramDesigner
                 SelectionService.ClearSelection();
                 Focus();
                 e.Handled = true;
+            }
+        }
+
+        protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseLeftButtonUp(e);
+
+            string storedDiagram = this.StoreDiagram().ToString();
+            if (storedDiagram != this.diagramState.Value)
+            {
+                this.diagramState.SaveState();
+                this.diagramState.Value = storedDiagram;
             }
         }
 
@@ -172,6 +181,44 @@ namespace DiagramDesigner
                 }
 
                 e.Handled = true;
+            }
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            if (e.Key == Key.Left || e.Key == Key.Right || e.Key == Key.Up || e.Key == Key.Down)
+            {
+                object originalSource = e.OriginalSource;
+                if (originalSource is DesignerItem)
+                {
+                    var movementViewModel = new MovementViewModel();
+                    e.Handled = true;
+
+                    var item = originalSource as DesignerItem;
+
+                    if (item.ParentID != Guid.Empty)
+                    {
+                        var groupMembers = selectionService.GetGroupMembers(item).OfType<DesignerItem>();
+
+                        bool leftConstrained = groupMembers.Any(designerItem => Canvas.GetLeft(designerItem) == 0);
+                        bool topConstrained = groupMembers.Any(designerItem => Canvas.GetTop(designerItem) == 0);
+                        if (e.Key == Key.Left && leftConstrained ||
+                            e.Key == Key.Up && topConstrained)
+                        {
+                            return;
+                        }
+                        foreach (DesignerItem designerItem in groupMembers)
+                        {
+                            movementViewModel.HandleKeyDown(e, designerItem);
+                        }
+                    }
+                    else
+                    {
+                        movementViewModel.HandleKeyDown(e, item);
+                    }
+                }
             }
         }
 

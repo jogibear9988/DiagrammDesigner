@@ -19,6 +19,8 @@ namespace DiagramDesigner
 {
     public partial class DesignerCanvas:INotifyPropertyChanged
     {
+        private IUndoable<string> diagramState = null;
+
         public static RoutedCommand Group = new RoutedCommand();
         public static RoutedCommand Ungroup = new RoutedCommand();
         public static RoutedCommand BringForward = new RoutedCommand();
@@ -37,6 +39,9 @@ namespace DiagramDesigner
 
         public DesignerCanvas()
         {
+            string initialStore = this.StoreDiagram().ToString();
+            this.diagramState = new Undoable<string>(initialStore);
+
             designerItems = new List<DesignerItem>();
 
             //this.CommandBindings.Add(new CommandBinding(ApplicationCommands.New, New_Executed));
@@ -47,6 +52,8 @@ namespace DiagramDesigner
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Copy, Copy_Executed, Copy_Enabled));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, Paste_Executed, Paste_Enabled));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, Delete_Executed, Delete_Enabled));
+            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Undo, Undo_Executed, Undo_Enabled));
+            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Redo, Redo_Executed, Redo_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.Group, Group_Executed, Group_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.Ungroup, Ungroup_Executed, Ungroup_Enabled));
             this.CommandBindings.Add(new CommandBinding(DesignerCanvas.BringForward, BringForward_Executed, Order_Enabled));
@@ -109,7 +116,11 @@ namespace DiagramDesigner
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             XElement root = LoadSerializedDataFromFile();
+            RestoreDiagram(root);
+        }
 
+        public void RestoreDiagram(XElement root)
+        {
             if (root == null)
                 return;
 
@@ -138,7 +149,8 @@ namespace DiagramDesigner
                 String sourceConnectorName = connectionXML.Element("SourceConnectorName").Value;
                 String sinkConnectorName = connectionXML.Element("SinkConnectorName").Value;
                 PathFinderTypes pathFinder = (PathFinderTypes)Enum.Parse(typeof(PathFinderTypes), connectionXML.Element("PathFinder").Value);
-                
+                SolidColorBrush color = (SolidColorBrush)new BrushConverter().ConvertFromString(connectionXML.Element("Color").Value);
+                double strokeThickness = Double.Parse(connectionXML.Element("StrokeThickness")?.Value);
 
                 Connector sourceConnector = GetConnector(sourceID, sourceConnectorName);
                 Connector sinkConnector = GetConnector(sinkID, sinkConnectorName);
@@ -146,6 +158,8 @@ namespace DiagramDesigner
                 Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
                 //Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
                 connection.ZIndex = Int32.Parse(connectionXML.Element("zIndex").Value);
+                connection.Color = color;
+                connection.StrokeThickness = strokeThickness;
                 this.Children.Add(connection);
             }
         }
@@ -155,6 +169,12 @@ namespace DiagramDesigner
         #region Save Command
 
         private void Save_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            XElement root = StoreDiagram();
+            SaveFile(root);
+        }
+
+        public XElement StoreDiagram()
         {
             IEnumerable<DesignerItem> designerItems = this.Children.OfType<DesignerItem>();
             IEnumerable<Connection> connections = this.Children.OfType<Connection>();
@@ -166,8 +186,9 @@ namespace DiagramDesigner
             root.Add(designerItemsXML);
             root.Add(connectionsXML);
 
-            SaveFile(root);
+            return root;
         }
+        
 
         #endregion
 
@@ -268,13 +289,17 @@ namespace DiagramDesigner
                     String sourceConnectorName = connectionXML.Element("SourceConnectorName").Value;
                     String sinkConnectorName = connectionXML.Element("SinkConnectorName").Value;
                     PathFinderTypes pathFinder = (PathFinderTypes)Enum.Parse(typeof(PathFinderTypes), connectionXML.Element("PathFinder").Value);
-
+                    SolidColorBrush color = (SolidColorBrush)new BrushConverter().ConvertFromString(connectionXML.Element("Color").Value);
+                    double strokeThickness = Double.Parse(connectionXML.Element("StrokeThickness")?.Value);
+                    
                     Connector sourceConnector = GetConnector(newSourceID, sourceConnectorName);
                     Connector sinkConnector = GetConnector(newSinkID, sinkConnectorName);
 
                     Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
                     //Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
                     connection.ZIndex = Int32.Parse(connectionXML.Element("zIndex").Value);
+                    connection.Color = color;
+                    connection.StrokeThickness = strokeThickness;
                     this.Children.Add(connection);
 
                     SelectionService.AddToSelection(connection);
@@ -307,6 +332,38 @@ namespace DiagramDesigner
         private void Delete_Enabled(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = this.SelectionService.CurrentSelection.Count() > 0;
+        }
+
+        #endregion
+
+        #region Undo Command
+
+        private void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.diagramState.Undo();
+            XElement diagram = XElement.Parse(this.diagramState.Value);
+            RestoreDiagram(diagram);
+        }
+
+        private void Undo_Enabled(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.diagramState.CanUndo;
+        }
+
+        #endregion
+
+        #region Redo Command
+
+        private void Redo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.diagramState.Redo();
+            XElement diagram = XElement.Parse(this.diagramState.Value);
+            RestoreDiagram(diagram);
+        }
+
+        private void Redo_Enabled(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.diagramState.CanRedo;
         }
 
         #endregion
@@ -879,18 +936,20 @@ namespace DiagramDesigner
         protected virtual XElement SerializeConnections(IEnumerable<Connection> connections)
         {
             var serializedConnections = new XElement("Connections",
-                           from connection in connections
-                           select new XElement("Connection",
-                                      new XElement("SourceID", connection.Source.ParentDesignerItem.ID),
-                                      new XElement("SinkID", connection.Sink.ParentDesignerItem.ID),
-                                      new XElement("SourceConnectorName", connection.Source.Name),
-                                      new XElement("SinkConnectorName", connection.Sink.Name),
-                                      new XElement("SourceArrowSymbol", connection.SourceArrowSymbol),
-                                      new XElement("SinkArrowSymbol", connection.SinkArrowSymbol),
-                                      new XElement("PathFinder", connection.PathFinder),
-                                      new XElement("zIndex", getZIndex(connection))
-                                     )
-                                  );
+                from connection in connections
+                select new XElement("Connection",
+                    new XElement("SourceID", connection.Source.ParentDesignerItem.ID),
+                    new XElement("SinkID", connection.Sink.ParentDesignerItem.ID),
+                    new XElement("SourceConnectorName", connection.Source.Name),
+                    new XElement("SinkConnectorName", connection.Sink.Name),
+                    new XElement("SourceArrowSymbol", connection.SourceArrowSymbol),
+                    new XElement("SinkArrowSymbol", connection.SinkArrowSymbol),
+                    new XElement("PathFinder", connection.PathFinder),
+                    new XElement("Color", connection.Color),
+                    new XElement("StrokeThickness", connection.StrokeThickness),
+                    new XElement("zIndex", getZIndex(connection))
+                )
+            );
 
             return serializedConnections;
         }
@@ -905,7 +964,10 @@ namespace DiagramDesigner
             Canvas.SetLeft(item, Double.Parse(itemXML.Element("Left").Value, CultureInfo.InvariantCulture) + OffsetX);
             Canvas.SetTop(item, Double.Parse(itemXML.Element("Top").Value, CultureInfo.InvariantCulture) + OffsetY);
             SetZIndex(item, Int32.Parse(itemXML.Element("zIndex").Value));
-            Object content = XamlReader.Load(XmlReader.Create(new StringReader(itemXML.Element("Content").Value)));
+            //Object content = XamlReader.Load(XmlReader.Create());
+            var reader = new StringReader(itemXML.Element("Content").Value);
+            var xmlReader = XmlReader.Create(reader);
+            var content = XamlReader.Load(xmlReader);
             item.Content = content;
             return item;
         }
