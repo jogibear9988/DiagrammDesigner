@@ -157,6 +157,7 @@ namespace DiagramDesigner
 
                 Connection connection = ConnectionGenerator(sourceConnector, sinkConnector, pathFinder);
                 //Canvas.SetZIndex(connection, Int32.Parse(connectionXML.Element("zIndex").Value));
+                connection.ShowShadow = bool.Parse(connectionXML.Element("ShowShadow").Value);
                 connection.ZIndex = Int32.Parse(connectionXML.Element("zIndex").Value);
                 connection.Color = color;
                 connection.StrokeThickness = strokeThickness;
@@ -947,7 +948,8 @@ namespace DiagramDesigner
                     new XElement("PathFinder", connection.PathFinder),
                     new XElement("Color", connection.Color),
                     new XElement("StrokeThickness", connection.StrokeThickness),
-                    new XElement("zIndex", getZIndex(connection))
+                    new XElement("zIndex", getZIndex(connection)),
+                    new XElement("ShowShadow", connection.ShowShadow)
                 )
             );
 
